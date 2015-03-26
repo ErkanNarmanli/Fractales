@@ -82,5 +82,5 @@ for k in range(taille):
 sys.stdout.write("\n")
 
 # Sauvegarde de l'image
-image.save('mandelbrot_{}px.png'.format(taille))
+image.save('Images/mandelbrot_{}px.png'.format(taille))
 

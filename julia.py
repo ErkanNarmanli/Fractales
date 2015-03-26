@@ -7,7 +7,7 @@ import time
 import sys
 
 # Constantes
-cote = int(input("Taille en pixel : "))
+taille = int(input("Taille en pixel : "))
 largeur = 4.4
 n_max = 200
 alpha = 5
@@ -15,7 +15,7 @@ part_r = float(input("Partie réelle : "))
 part_i = float(input("Partie imaginaire : "))
 c = complex(part_r,part_i)
 # Image
-image = Image.new('RGB', (cote, cote), (255, 255, 255))
+image = Image.new('RGB', (taille, taille), (255, 255, 255))
 # Outil de dessin
 draw = ImageDraw.Draw(image)
 
@@ -23,8 +23,8 @@ draw = ImageDraw.Draw(image)
 # à partir des coordonnées dans l'image
 def ch_coord(k, l):
 	return(complex( \
-		(k - cote/2.)*largeur/float(cote), \
-		(l - cote/2.)*largeur/float(cote) \
+		(k - taille/2.)*largeur/float(taille), \
+		(l - taille/2.)*largeur/float(taille) \
 		))
 
 # Détermine la couleur du pixel en fonction du rang à partir
@@ -43,14 +43,14 @@ def ecrire(chaine,t_max):
 	sys.stdout.write(chaine)
 
 def chargement(k):
-	pourc = 100*k/float(cote)
+	pourc = 100*k/float(taille)
 	pourv = 20*pourc/100.  #pourvingt, parce que j'ai envie
 	pourc = int(pourc)+1
 	pourv = int(pourv)+1
 	sys.stdout.write("\r")
 	ecrire("%d%%:" % pourc,5)
-	ecrire("%d"  % (k+1),len("%d" % cote))
-	sys.stdout.write("/%d pix" % cote)
+	ecrire("%d"  % (k+1),len("%d" % taille))
+	sys.stdout.write("/%d pix" % taille)
 	sys.stdout.write("   [")
 	for m in range(pourv):
 		sys.stdout.write(":")
@@ -60,17 +60,17 @@ def chargement(k):
 	sys.stdout.flush()
 	return
 
-for k in range(cote):
+for k in range(taille):
 	chargement(k)
-	for l in range(cote/2+1):
+	for l in range(taille/2+1):
 		u = ch_coord(k,l)
 		n = 0
 		while abs(u) <= 2 and n < n_max:
 			u = u*u + c
 			n = n + 1
 		draw.point((k, l), fill=couleur_pix(n))
-		draw.point((cote-k,cote-l), fill=couleur_pix(n))
+		draw.point((taille-k,taille-l), fill=couleur_pix(n))
 sys.stdout.write("\n")
 
-image.save('julia_{}+i{}.png'.format(c.real,c.imag))
+image.save('Images/julia_{}+i{}.png'.format(c.real,c.imag))
 
