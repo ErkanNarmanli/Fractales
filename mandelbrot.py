@@ -7,7 +7,10 @@ from cmath import *
 
 # Constantes
 centre = -0.7 	# -0.7
-taille = 700 	# 700
+try:
+	taille = int(sys.argv[1])
+except:
+	taille = 600 	# 700
 largeur = 2.8	# 2.8
 n_max = 200	# 200
 alpha = 5	# 5
