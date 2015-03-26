@@ -7,7 +7,7 @@ from cmath import *
 
 # Constantes
 centre = -0.7 	# -0.7
-taille = 20000 	# 700
+taille = 700 	# 700
 largeur = 2.8	# 2.8
 n_max = 200	# 200
 alpha = 5	# 5
@@ -16,20 +16,22 @@ image = Image.new('RGB', (taille, taille), (255, 255, 255))
 # Outil de dessin
 draw = ImageDraw.Draw(image)
 
+# Fonction qui aligne du texte à droite dans un espace de t_max caractères
 def ecrire(chaine,t_max):
 	for m in range(t_max-len(chaine)):
 		sys.stdout.write(" ")
 	sys.stdout.write(chaine)
 
+# Affiche une barre de chargement
 def chargement(k):
 	pourc = 100*k/float(taille)
 	pourv = 20*pourc/100.  #pourvingt, parce que j'ai envie
 	pourc = int(pourc)+1
 	pourv = int(pourv)+1
 	sys.stdout.write("\r")
-	ecrire("%d%%:" % pourc,5)
-	ecrire("%d"  % (k+1),len("%d" % taille))
-	sys.stdout.write("/%d pix" % taille)
+	ecrire("{}%%:".format(pourc),5)
+	ecrire(str(k+1),len(str(taille)))
+	sys.stdout.write("{} pix".format(taille))
 	sys.stdout.write("   [")
 	for m in range(pourv):
 		sys.stdout.write(":")
@@ -64,6 +66,7 @@ for k in range(taille):
 		u = complex(0,0)
 		c = ch_coord(k, l)
 		n = 0
+		# Si on est dans la cardioïde, on ne fait pas les tests
 		if 2*abs(c-0.25) < (1 - cos(phase(c-0.25))).real:
 			col = (0,0,0)
 		else:
@@ -72,7 +75,7 @@ for k in range(taille):
 				n = n + 1
 			col = couleur_pix(n)
 		draw.point((k, l), fill=col)
-		draw.point((k, taille-l), fill=col)
+		draw.point((k, taille-l), fill=col) # On utilise l'invariance par conjugaison
 sys.stdout.write("\n")
 
 # Sauvegarde de l'image
