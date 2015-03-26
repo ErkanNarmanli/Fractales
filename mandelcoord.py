@@ -5,7 +5,7 @@ from Tkinter import *
 from PIL import Image, ImageTk
 
 ### Constantes
-taille_img = 700
+taille_img = 600
 nb_decimales = 4
 
 ### Fonctions utiles
@@ -30,7 +30,7 @@ def set_nb_dec(x, n):
 fenetre = Tk()
 fenetre.title('Position sur le Mandelbrot')
 ### Image
-image_fond = Image.open('mandelbrot_coord.png') # Attention à utiliser la bonne image
+image_fond = Image.open('Images/mandelbrot_coord.png') # Attention à utiliser la bonne image
 image_fond = ImageTk.PhotoImage(image_fond)
 ### Canvas contenant l'image
 mandel = Canvas(fenetre, height = taille_img, width = taille_img)

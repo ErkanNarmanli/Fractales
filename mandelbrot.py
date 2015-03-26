@@ -32,7 +32,7 @@ def chargement(k):
 	pourc = int(pourc)+1
 	pourv = int(pourv)+1
 	sys.stdout.write("\r")
-	ecrire("{}%%:".format(pourc),5)
+	ecrire("{}%:".format(pourc),5)
 	ecrire(str(k+1),len(str(taille)))
 	sys.stdout.write("/{} pix".format(taille))
 	sys.stdout.write("   [")
