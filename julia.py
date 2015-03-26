@@ -22,5 +22,13 @@ c = complex(part_r,part_i)
 image = cree_image(taille=taille, c=c, n_max=n_max, alpha=alpha, largeur = largeur)
 
 #Et on la sauvegarde
-image.save('Images/julia_{}+i{}.png'.format(c.real,c.imag))
 image.show()
+reponse = ""
+while (reponse != "o")and(reponse != "n"):
+	reponse = raw_input("Voulez-vous sauvegarde l'image ?[O/n] : ")
+
+if reponse == "o":
+	image.save('Images/julia_{}+i{}.png'.format(c.real,c.imag))
+	print("Image enregistrée\n")
+else:
+	print("Image non enregistrée\n")
