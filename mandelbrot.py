@@ -34,7 +34,7 @@ def chargement(k):
 	sys.stdout.write("\r")
 	ecrire("{}%%:".format(pourc),5)
 	ecrire(str(k+1),len(str(taille)))
-	sys.stdout.write("{} pix".format(taille))
+	sys.stdout.write("/{} pix".format(taille))
 	sys.stdout.write("   [")
 	for m in range(pourv):
 		sys.stdout.write(":")
