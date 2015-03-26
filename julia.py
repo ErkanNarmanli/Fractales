@@ -25,7 +25,7 @@ image = cree_image(taille=taille, c=c, n_max=n_max, alpha=alpha, largeur = large
 image.show()
 reponse = ""
 while (reponse != "o")and(reponse != "n"):
-	reponse = raw_input("Voulez-vous sauvegarde l'image ?[O/n] : ")
+	reponse = raw_input("Voulez-vous sauvegarder l'image ?[O/n] : ")
 
 if reponse == "o":
 	image.save('Images/julia_{}+i{}.png'.format(c.real,c.imag))

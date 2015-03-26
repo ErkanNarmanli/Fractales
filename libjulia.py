@@ -67,3 +67,18 @@ def cree_image(taille=600, c = 0, n_max = 200, alpha = 5, largeur = 4.2):
 	sys.stdout.write("\n")
 	print("Image générée")
 	return(image)
+
+def all_in_one(taille, part_r, part_i):
+	image = cree_image(taille=taille, c=complex(part_r, part_i))
+	image.show()
+	reponse = ""
+	while (reponse != "o")and(reponse != "n"):
+		reponse = raw_input("Voulez-vous sauvegarder l'image ? [O/n] : ")
+	
+	if reponse == "o":
+		image.save('Image/julia_{}+i{}.png'.format(part_r,part_i))
+		print("Image enregistrée\n")
+
+	else:
+		print("Image non enregistrée\n")
+	
