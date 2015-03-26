@@ -7,11 +7,13 @@ import time
 import sys
 
 # Constantes
-cote = 1400  #Parité ?
+cote = int(input("Taille en pixel : "))
 largeur = 4.4
 n_max = 200
 alpha = 5
-c = complex(0.3,0.024)
+part_r = float(input("Partie réelle : "))
+part_i = float(input("Partie imaginaire : "))
+c = complex(part_r,part_i)
 # Image
 image = Image.new('RGB', (cote, cote), (255, 255, 255))
 # Outil de dessin
