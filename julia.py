@@ -23,4 +23,4 @@ image = cree_image(taille=taille, c=c, n_max=n_max, alpha=alpha, largeur = large
 
 #Et on la sauvegarde
 image.save('Images/julia_{}+i{}.png'.format(c.real,c.imag))
-
+image.show()
