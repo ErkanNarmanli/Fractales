@@ -25,11 +25,14 @@ def couleur_pix(n, n_max, alpha):
 	col = int(col)
 	return(col, col, col)
 
+# Aligne la chaîne de caractères chaine à droite à droite d'un
+# espace à t_max caractères
 def ecrire(chaine,t_max):
 	for m in range(t_max-len(chaine)):
 		sys.stdout.write(" ")
 	sys.stdout.write(chaine)
 
+# 
 def chargement(k, taille):
 	pourc = 100*k/float(taille)
 	pourv = 20*pourc/100.  #pourvingt, parce que j'ai envie
@@ -74,6 +77,7 @@ def all_in_one(taille, part_r, part_i):
 	reponse = ""
 	while (reponse != "o")and(reponse != "n"):
 		reponse = raw_input("Voulez-vous sauvegarder l'image ? [O/n] : ")
+		reponse = reponse.lower()
 	
 	if reponse == "o":
 		image.save('Image/julia_{}+i{}.png'.format(part_r,part_i))

@@ -3,7 +3,6 @@
 
 from PIL import Image, ImageDraw, ImageFont
 from math import sqrt
-import time
 import sys
 from libjulia import *
 
@@ -21,11 +20,12 @@ c = complex(part_r,part_i)
 # On initialise l'image
 image = cree_image(taille=taille, c=c, n_max=n_max, alpha=alpha, largeur = largeur)
 
-#Et on la sauvegarde
+# Et on la sauvegarde
 image.show()
 reponse = ""
 while (reponse != "o")and(reponse != "n"):
 	reponse = raw_input("Voulez-vous sauvegarder l'image ?[O/n] : ")
+	reponse = reponse.lower()
 
 if reponse == "o":
 	image.save('Images/julia_{}+i{}.png'.format(c.real,c.imag))
