@@ -6,16 +6,22 @@ import sys
 from cmath import *
 
 # Constantes
-centre = -0.7 	# -0.7
+centre = 0 	# -0.7
 try:
 	taille = int(sys.argv[1])
 except:
 	taille = 600 	# 700
 try:
-	puis = int(sys.argv[1])
+	puis_r = int(sys.argv[2])
 except:
-	puis = 3 
-largeur = 2.8	# 2.8
+	puis_r = 3 
+try:
+	puis_i = int(sys.argv[3])
+except:
+	puis_i = 0
+
+puis = complex(puis_r,puis_i)
+largeur = 4	# 2.8
 n_max = 50	# 200
 alpha = 5	# 5
 # Image
@@ -66,18 +72,6 @@ def couleur_pix(n):
 		c = int(c)
 	return(c, c, c)
 
-#Fonction puissance
-def puissance(a,n):
-	if n == 0:
-		return 1
-	else:
-		if n%2 == 0:
-			t = puissance(a,n/2)
-			return t*t
-		else:
-			t = puissance(a,(n-1)/2)
-			return a*t*t
-
 # Parcours
 for k in range(taille):
 	chargement(k)
@@ -86,7 +80,10 @@ for k in range(taille):
 		c = ch_coord(k, l)
 		n = 0
 		while abs(u) <= 2 and n < n_max:
-			u = puissance(u,puis) + c
+			if u != 0:
+				u = u**puis + c
+			else:
+				u = c
 			n = n + 1
 		col = couleur_pix(n)
 		draw.point((k, l), fill=col)
