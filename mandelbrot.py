@@ -4,6 +4,7 @@
 from PIL import Image, ImageDraw, ImageFont
 import sys
 from cmath import *
+from colorsys import *
 
 # Constantes
 centre = -0.7 	# -0.7
@@ -61,6 +62,12 @@ def couleur_pix(n):
 		c = 20 + 235*((n_max - n)/float(n_max))**alpha
 		c = int(c)
 	return(c, c, c)
+#A DELETE
+def tripl_entier(a):
+	a_0 = int(a[0])
+	a_1 = int(a[1])
+	a_2 = int(a[2])
+	return (a_0, a_1, a_2)
 
 # Parcours
 for k in range(taille):
@@ -71,7 +78,7 @@ for k in range(taille):
 		n = 0
 		# Si on est dans la cardioïde, on ne fait pas les tests
 		if 2*abs(c-0.25) < (1 - cos(phase(c-0.25))).real:
-			col = (0,0,0)
+			col = tripl_entier(hls_to_rgb(0.5,0.4,255))
 		else:
 			while abs(u) <= 2 and n < n_max:
 				u = u*u + c
@@ -82,5 +89,6 @@ for k in range(taille):
 sys.stdout.write("\n")
 
 # Sauvegarde de l'image
+image.show()
 image.save('Images/mandelbrot_{}px.png'.format(taille))
 
