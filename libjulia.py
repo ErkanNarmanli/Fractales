@@ -1,57 +1,14 @@
 #!/usr/bin/python
 # -*-coding:utf-8 -*
 
+from libfractales import *
 from PIL import Image, ImageDraw, ImageFont
 from math import sqrt
 import time
 import sys
 
 
-# Détermine les coordonnées dans le plan complexe
-# à partir des coordonnées dans l'image
-def ch_coord(k, l, taille, largeur):
-	return(complex( \
-		(k - taille/2.)*largeur/float(taille), \
-		(l - taille/2.)*largeur/float(taille) \
-		))
-
-# Détermine la couleur du pixel en fonction du rang à partir
-# duquel on sort du cercle de rayon 2
-def couleur_pix(n, n_max, alpha):
-	if n == n_max: 
-		col = 0
-	else:
-		col = 230*((n_max - n)/float(n_max))**alpha + 25
-	col = int(col)
-	return(col, col, col)
-
-# Aligne la chaîne de caractères chaine à droite à droite d'un
-# espace à t_max caractères
-def ecrire(chaine,t_max):
-	for m in range(t_max-len(chaine)):
-		sys.stdout.write(" ")
-	sys.stdout.write(chaine)
-
-# 
-def chargement(k, taille):
-	pourc = 100*k/float(taille)
-	pourv = 20*pourc/100.  #pourvingt, parce que j'ai envie
-	pourc = int(pourc)+1
-	pourv = int(pourv)+1
-	sys.stdout.write("\r")
-	ecrire("{}%:".format(pourc),5)
-	ecrire(str(k+1),len(str(taille)))
-	sys.stdout.write("/{} pix".format(taille))
-	sys.stdout.write("   [")
-	for m in range(pourv):
-		sys.stdout.write(":")
-	for m in range(20-pourv):
-		sys.stdout.write(" ")
-	sys.stdout.write("]")
-	sys.stdout.flush()
-	return
-
-def cree_image(taille=600, c = 0, n_max = 200, alpha = 5, largeur = 4.2):
+def cree_julia(taille=600, c = 0, n_max = 200, alpha = 5, largeur = 4.2):
 	# Déclaration de l'image
 	image = Image.new('RGB', (taille, taille), (255, 255, 255))
 	# Outil de dessin

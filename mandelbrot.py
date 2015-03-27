@@ -7,7 +7,7 @@ from libmandel import *
 taille = int(raw_input("Taille en pixels : "))
 
 # On génère l'image
-image = mandelbrot(taille = taille)
+image = cree_mandelbrot(taille = taille)
 
 # On montre l'image à l'utilisateur
 image.show()

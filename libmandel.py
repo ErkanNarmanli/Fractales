@@ -6,7 +6,7 @@ from cmath import *
 from libfractales import *
 
 # Fonction qui trace un ensemble de mandelbrot
-def mandelbrot(taille = 600, n_max = 200, centre = -0.7, largeur = 2.8, alpha = 5):
+def cree_mandelbrot(taille = 600, n_max = 200, centre = -0.7, largeur = 2.8, alpha = 5):
 	# Déclaration de l'image
 	image = Image.new('RGB', (taille, taille), (255, 255, 255))
 	# Outil de dessin

@@ -18,7 +18,7 @@ alpha = 5
 c = complex(part_r,part_i)
 
 # On initialise l'image
-image = cree_image(taille=taille, c=c, n_max=n_max, alpha=alpha, largeur = largeur)
+image = cree_julia(taille=taille, c=c, n_max=n_max, alpha=alpha, largeur = largeur)
 
 # Et on la sauvegarde
 image.show()
