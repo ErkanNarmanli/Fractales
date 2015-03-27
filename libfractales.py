@@ -1,14 +1,14 @@
 #!/usr/bin/python
 # -*-coding:utf-8 -*-
 
-from sys import stdout
+import sys
 
 # Fonction qui aligne du texte à droite dans un espace de t_max caractères
 def ecrire(chaine, t_max):
 	l = len(chaine)
 	for m in range(t_max - l):
-		stdout.write(" ") 
-	stdout.write(chaine)
+		sys.stdout.write(" ") 
+	sys.stdout.write(chaine + '\n')
 
 # Affiche une barre de chargement
 def chargement(k, taille):
