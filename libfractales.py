@@ -8,7 +8,7 @@ def ecrire(chaine, t_max):
 	l = len(chaine)
 	for m in range(t_max - l):
 		sys.stdout.write(" ") 
-	sys.stdout.write(chaine + '\n')
+	sys.stdout.write(chaine)
 
 # Affiche une barre de chargement
 def chargement(k, taille):
@@ -16,7 +16,7 @@ def chargement(k, taille):
 	pourv = 20*pourc/100. #pourvingt, parce que j'ai envie
 	pourc = int(pourc) + 1
 	pourv = int(pourv) + 1
-	stdout.write('\r')
+	sys.stdout.write('\r')
 	ecrire("{}% : ".format(pourc), 5)
 	ecrire(str(k+1), len(str(taille)))
 	sys.stdout.write('/{} pix'.format(taille))
@@ -26,6 +26,7 @@ def chargement(k, taille):
 	for m in range(20 - pourv):
 		sys.stdout.write(' ')
 	sys.stdout.write(']')
+	return
 
 # Détermine les coordonnées dans le plan complexe
 # à partir des coordonnées dans l'image

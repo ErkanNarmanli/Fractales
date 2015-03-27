@@ -17,15 +17,6 @@ image = Image.new('RGB', (taille, taille), (255, 255, 255))
 #Outil de dessin
 draw = ImageDraw.Draw(image)
 
-
-#Determine les cooerdonées dans le plan complexe
-#à partir des coordonnées dans l'image
-def ch_coord(k, l):
-	return(complex( \
-		(float(k) - taille/2.)*largeur/float(taille) + centre, \
-		(float(l) - taille/2.)*largeur/float(taille) \
-		))
-
 #Fonction de coloration d'un complexe
 def couleur_complexe(z):
 	teinte = phase(z)/(2*pi)
@@ -41,10 +32,10 @@ def couleur_complexe(z):
 for k in range(taille):
 	chargement(k,taille)
 	for l in range(taille):
-		u = ch_coord(k,l)
+		u = ch_coord(k,l, taille, largeur, centre)
 		col = couleur_complexe(u)
 		draw.point((k,l), fill = col)
-print("\n")
+print("")
 
 #Affichage de l'image
 image.show()
