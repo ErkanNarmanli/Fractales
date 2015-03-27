@@ -6,7 +6,7 @@ import sys
 from cmath import *
 from colorsys import *
 
-#Constante
+#Constantes
 taille = 800
 largeur = 2.8
 centre = 0
