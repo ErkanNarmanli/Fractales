@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*-coding:utf-8 -*
 
-from PIL import Image, ImageDraw, ImageFront
+from PIL import Image, ImageDraw, ImageFont
 import sys
 from cmath import *
 from colorsys import *
@@ -29,7 +29,13 @@ def ch_coord(k, l):
 #Fonction de coloration d'un complexe
 def couleur_complexe(z):
 	teinte = phase(z)/(2*pi)
-	lumino = abs(z)
+	lumino = 0.5
+	col = hls_to_rgb(teinte,lumino,0.5)
+	c_1 = int(col[0])
+	c_2 = int(col[1])
+	c_3 = int(col[2])
+	return (c_1, c_2, c_3)
+
 
 #Main : on parcours les complexes
 for k in range(taille):
