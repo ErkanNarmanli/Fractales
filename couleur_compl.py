@@ -2,9 +2,9 @@
 # -*-coding:utf-8 -*
 
 from PIL import Image, ImageDraw, ImageFont
-import sys
 from cmath import *
 from colorsys import *
+from libfractales import *
 
 #Constantes
 taille = 800
@@ -29,8 +29,8 @@ def ch_coord(k, l):
 #Fonction de coloration d'un complexe
 def couleur_complexe(z):
 	teinte = phase(z)/(2*pi)
-	lumino = 0.5
-	col = hls_to_rgb(teinte,lumino,0.5)
+	lumino = max(0, (1-abs(z)/largeur))
+	col = hls_to_rgb(teinte, 150, lumino)
 	c_1 = int(col[0])
 	c_2 = int(col[1])
 	c_3 = int(col[2])
@@ -39,9 +39,12 @@ def couleur_complexe(z):
 
 #Main : on parcours les complexes
 for k in range(taille):
+	chargement(k,taille)
 	for l in range(taille):
 		u = ch_coord(k,l)
 		col = couleur_complexe(u)
 		draw.point((k,l), fill = col)
+print("\n")
+
 #Affichage de l'image
 image.show()
