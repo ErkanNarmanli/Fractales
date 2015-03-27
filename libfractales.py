@@ -17,7 +17,7 @@ def chargement(k, taille):
 	pourc = int(pourc) + 1
 	pourv = int(pourv) + 1
 	stdout.write('\r')
-	ecrire('{}% : '.format(pourc), 5)
+	ecrire("{}% : ".format(pourc), 5)
 	ecrire(str(k+1), len(str(taille)))
 	stdout.write('/{} pix'.format(taille))
 	stdout.write('   [')
