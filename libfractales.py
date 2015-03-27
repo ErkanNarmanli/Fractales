@@ -19,13 +19,13 @@ def chargement(k, taille):
 	stdout.write('\r')
 	ecrire("{}% : ".format(pourc), 5)
 	ecrire(str(k+1), len(str(taille)))
-	stdout.write('/{} pix'.format(taille))
-	stdout.write('   [')
+	sys.stdout.write('/{} pix'.format(taille))
+	sys.stdout.write('   [')
 	for m in range(pourv):
-		stdout.write(':')
+		sys.stdout.write(':')
 	for m in range(20 - pourv):
-		stdout.write(' ')
-	stdout.write(']')
+		sys.stdout.write(' ')
+	sys.stdout.write(']')
 
 # Détermine les coordonnées dans le plan complexe
 # à partir des coordonnées dans l'image
