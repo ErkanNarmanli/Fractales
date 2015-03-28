@@ -26,6 +26,7 @@ def chargement(k, taille):
 	for m in range(20 - pourv):
 		sys.stdout.write(' ')
 	sys.stdout.write(']')
+	sys.stdout.flush() # Rend l'affichage plus fluide
 
 # Détermine les coordonnées dans le plan complexe
 # à partir des coordonnées dans l'image
