@@ -55,5 +55,8 @@ if reponse == "o":
 			print("Image enregistrée")
 		else:
 			print('Image non enregistrée')
+	else:
+		image.save('Images/{nom}_{taille}px.png'.format(nom = nom_ssext, taille = taille))
+		print('Image enregistrée')
 else:
 	print("Image non enregistrée")
