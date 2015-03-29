@@ -7,7 +7,7 @@ from colorsys import *
 from libfractales import *
 
 #Constantes
-taille = 800
+taille = 600
 largeur = 2.8
 centre = 0
 
