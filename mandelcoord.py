@@ -33,7 +33,7 @@ fenetre = Tk()
 fenetre.geometry('{}x{}'.format(taille_img + taille_miniature + 20, taille_img + 10))
 fenetre.title('Position sur le Mandelbrot')
 ### Images
-image_fond = Image.open('Images/mandelbrot_coord.png') # Attention à utiliser la bonne image
+image_fond = Image.open('Images/mandelbrot_coord.png') # Attention utiliser la bonne image
 image_fond = ImageTk.PhotoImage(image_fond)
 miniature = cree_julia(taille = taille_miniature, n_max = 100, alpha = 3)
 miniature = ImageTk.PhotoImage(miniature)
