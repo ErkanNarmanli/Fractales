@@ -6,8 +6,13 @@ from cmath import *
 from colorsys import *
 from libfractales import *
 
-# Fonction qui trace un ensemble de mandelbrot
 def cree_mandelbrot(taille = 600, n_max = 200, centre = -0.7, largeur = 2.8, alpha = 5):
+	"""Trace un ensemble de Mandelbrot
+	taille 	: l'image est au format taille*taille
+	n_max 	: entier jusqu'auquel on calcul la sortie du cercle
+	largeur	: largeur que représente taille dans le plan complexe
+	centre 	: centre de l'image dans le plan complexe
+	alpha	: exposant d'écrasement pour le dégradé de couleur"""
 	# Déclaration de l'image
 	image = Image.new('RGB', (taille, taille), (255, 255, 255))
 	# Outil de dessin
@@ -31,8 +36,9 @@ def cree_mandelbrot(taille = 600, n_max = 200, centre = -0.7, largeur = 2.8, alp
 	print("  Image Générée") # Retour à la ligne
 	return(image)
 
-# Fonction qui trace un ensemble de mandelbrot en couleur ! Et c'est moche :)
 def cree_mandelbrot_couleur_moche(taille = 600, n_max = 200, centre = -0.7, largeur = 2.8, alpha = 5):
+	"""Trace ensemble de mandelbrot avec tout plein de couleur
+	C'est moche"""
 	# Déclaration de l'image
 	image = Image.new('RGB', git(taille, taille), (255, 255, 255))
 	# Outil de dessin
@@ -59,8 +65,9 @@ def cree_mandelbrot_couleur_moche(taille = 600, n_max = 200, centre = -0.7, larg
 	print("  Image Générée") # Retour à la ligne
 	return(image)
 
-# Fonction qui trace un ensemble de mandelbrot zoli
 def cree_mandelbrot_zoli(taille = 600, n_max = 200, centre = -0.7, largeur = 2.8, alpha = 5, couleur_fond = (27, 45, 66), couleur_bord = (163, 183, 205), couleur_mandel = (0,0,0)):
+	"""Trace un ensemble de Mandelbrot avec un dégradé
+	C'est zoli :)"""
 	# Déclaration de l'image
 	image = Image.new('RGB', (taille, taille), (255, 255, 255))
 	# Outil de dessin

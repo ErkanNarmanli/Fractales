@@ -9,8 +9,8 @@ from colorsys import *
 from cmath import *
 from PIL import Image, ImageDraw, ImageFont
 
-#Améliore les bords du contour de la fractale
 def ameliore_bord(image, taille):
+	"""Améliore les bords du contour de la fractale """
 	print("Lissage de l'image")
 	draw = ImageDraw.Draw(image)
 	for k in range(taille):
@@ -22,8 +22,8 @@ def ameliore_bord(image, taille):
 	print("\n")
 	return image
 
-#Rend TRUE si (k,l) a au moins un voisin noir
 def voisin_noirs((k,l), image):
+	""" Rend TRUE si (k,l) a au moins un voisin noir"""
 	return((image.getpixel((k-1, l-1)) == (0,0,0)) \
 		or (image.getpixel((k-1, l)) == (0,0,0)) \
 		or (image.getpixel((k-1, l+1)) == (0,0,0)) \
@@ -34,8 +34,8 @@ def voisin_noirs((k,l), image):
 		or (image.getpixel((k+1, l)) == (0,0,0)) \
 		or (image.getpixel((k-1, l+1)) == (0,0,0)))
 
-#Rend la moyenne des prixels à coté
 def moyenne((k,l), image):
+	"""Rend la moyenne des pixels à coté"""
 	tot = (0,0,0)
 	tot = add_tpl(tot, (image.getpixel((k-1, l-1))))
 	tot = add_tpl(tot, (image.getpixel((k-1, l))))
@@ -53,23 +53,24 @@ def moyenne((k,l), image):
 	
 	
 	
-#Multiplier un truple par un scalaire
-#REND UN TRUPLE **ENTIER**
 def mult_tpl(t, v):
+	"""Multiplie un truple par un scalaire
+	REND UN TRUPLE ***ENTIER***"""
 	a = int(t*v[0])
 	b = int(t*v[1])
 	c = int(t*v[2])
 	return (a, b, c)
 
-#Additionne deux truples
 def add_tpl(v, w):
+	"""Additionne deux truples"""
 	a = v[0] + w[0]
 	b = v[1] + w[1]
 	c = v[2] + w[2]
 	return (a, b, c)
 
-#Fonction de coloration d'un complexe
 def couleur_complexe(z, largeur = 2.8):
+	"""Fonction de coloration d'un complexe
+	la teinte dépend de l'argument et la saturation du module"""
 	teinte = phase(z)/(2*pi)
 	lumino = max(0, (1-abs(z)/largeur))
 	col = hls_to_rgb(teinte, 150, lumino)
@@ -80,20 +81,24 @@ def couleur_complexe(z, largeur = 2.8):
 
 #Fonction de coloration pour un truc zoli :)
 def coloration_zoli(n, n_max, col_a, col_b):
+	"""Colorie en fonction de la vitesse de divergence
+	colorie selon un dégradé entre col_a et col_b
+	le dégradé est écrasé par un puissance"""
 	h = add_tpl(col_b, mult_tpl(-1, col_a))
 	t = ((n_max - n)/float(n_max))**10
 	res = add_tpl(col_a, mult_tpl(t, h))
 	return res
 
-# Fonction qui aligne du texte à droite dans un espace de t_max caractères
 def ecrire(chaine, t_max):
+	"""Fonction qui aligne du texte à droite dans un espace de t_max caractères"""
 	l = len(chaine)
 	for m in range(t_max - l):
 		sys.stdout.write(" ") 
 	sys.stdout.write(chaine)
 
-# Affiche une barre de chargement
 def chargement(k, taille):
+	"""Affiche une barre de chargement
+	ne fini pas par un \n"""
 	pourc = 100*k/float(taille)
 	pourv = 20*pourc/100. #pourvingt, parce que j'ai envie
 	pourc = int(pourc) + 1
