@@ -36,8 +36,8 @@ def ch_coord(k, l, taille, largeur, centre):
 		(float(l) - taille/2.)*largeur/float(taille) \
 		))
 
-# Détermine la couleur du pixel en fonction du rang à partir
-# duquel on sort du cercle de rayon 2
+# Détermine la couleur du pixel sur une echelle de gris en
+# fonction du rang à partir duquel on sort du cercle de rayon 2
 def couleur_pix(n, n_max, alpha = 5):
 	if n == n_max:
 		c = 0
@@ -46,3 +46,11 @@ def couleur_pix(n, n_max, alpha = 5):
 		c = int(c)
 	return(c, c, c)
 
+# Autre façon de colorier (toujours en noir en echelle de gris)
+def couleur_pix_v2(n, n_max, n_min = 0, alpha = 5):
+	if n == n_max:
+		c = 0
+	else:
+		c = 20 + 235*((n_max - n)/float(n_max - n_min))**alpha
+		c = int(c)
+	return(c, c, c)
