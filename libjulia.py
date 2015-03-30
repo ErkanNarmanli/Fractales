@@ -2,7 +2,7 @@
 # -*-coding:utf-8 -*
 
 from libfractales import *
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw
 from math import sqrt
 import time
 import sys

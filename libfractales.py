@@ -117,6 +117,14 @@ def ch_coord(k, l, taille, largeur, centre):
 		(float(l) - taille/2.)*largeur/float(taille) \
 		))
 
+def inv_ch_coord(x, y, taille, largeur, centre):
+	""" Fonction inverse de la fonction ch_coord
+	Retourne des entiers """
+	x, y = c.real, c.imag
+	k = int((x-c)*taille/float(largeur) + taille/2.)
+	l = int(y*taille/float(largeur) + taille/2.)
+	return(k, l)
+
 def enregistre(image, nom, nom_dossier = 'Images'):
 	""" On demande à l'utilisateur s'il souhaite enregistrer l'image.
 	Le cas échéant, on cherche dans le dossier 'nom_dossier' d'autres versions de la même image qu'on présente à l'utilisateur.
