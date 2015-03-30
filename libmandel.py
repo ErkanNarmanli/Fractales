@@ -27,5 +27,5 @@ def cree_mandelbrot(taille = 600, n_max = 200, centre = -0.7, largeur = 2.8, alp
 				col = couleur_pix(n, n_max, alpha)
 			draw.point((k, l), fill=col)
 			draw.point((k, taille-l), fill=col) # On utilise l'invariance par conjugaison
-	print("") # Retour à la ligne
+	print("\nImage Générée") # Retour à la ligne
 	return(image)

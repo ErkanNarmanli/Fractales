@@ -24,7 +24,7 @@ def cree_julia(taille=600, c = 0, n_max = 200, alpha = 5, largeur = 4.2):
 			col = couleur_pix(n, n_max, alpha)
 			draw.point((k, l), fill=col)
 			draw.point((taille-k,taille-l), fill=col)
-	print("Image générée")
+	print("\nImage générée")
 	return(image)
 
 def all_in_one(taille, part_r, part_i):
