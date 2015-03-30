@@ -58,17 +58,6 @@ miniature = ImageTk.PhotoImage(miniature)
 mini_julia = Canvas(frame_mini, height = taille_miniature, width = taille_miniature)
 mini_julia.create_image(taille_miniature/2, taille_miniature/2, image = miniature)
 label_coord_mini = Label(frame_mini, text = 'c = 0.0000 + 0.0000i')
-# Fonction qui crée un julia et l'affiche dans le label mini_julia
-def affiche_julia(event):
-	global miniature
-	x, y = get_coord(event.x, event.y)
-	y = -y # Dans Tkinter, l'axes des ordonnées est orienté à l'envers
-	miniature = ImageTk.PhotoImage(cree_julia(taille = taille_miniature, \
-			c = complex(x, y), n_max = 100, alpha = 3, largeur = 4.2))
-	mini_julia.create_image(taille_miniature/2, taille_miniature/2, image = miniature)
-	label_coord_mini['text'] = 'c = {x:.4f} + {y:.4f}i'.format(x = x, y = y)
-# On associe l'événement 'clic de souris' à affiche_julia
-mandel.bind('<Button-1>', affiche_julia)
 ### Fin miniature de Julia
 
 ### Grand Julia
@@ -95,6 +84,21 @@ def grand_julia():
 		pass
 # On associe le bouton à la fonction grand_julia
 bouton_julia['command'] = grand_julia
+
+# Fonction qui crée un julia et l'affiche dans le label mini_julia
+def affiche_julia(event):
+	global miniature
+	x, y = get_coord(event.x, event.y)
+	y = -y # Dans Tkinter, l'axes des ordonnées est orienté à l'envers
+	miniature = ImageTk.PhotoImage(cree_julia(taille = taille_miniature, \
+			c = complex(x, y), n_max = 100, alpha = 3, largeur = 4.2))
+	mini_julia.create_image(taille_miniature/2, taille_miniature/2, image = miniature)
+	label_coord_mini['text'] = 'c = {x:.4f} + {y:.4f}i'.format(x = x, y = y)
+	var_choix_x.set(str(x))
+	var_choix_y.set(str(y))
+# On associe l'événement 'clic de souris' à affiche_julia
+mandel.bind('<Button-1>', affiche_julia)
+
 ### Fin grand Julia
 
 ### Disposition des widgets
@@ -106,12 +110,12 @@ frame_mini.pack(side = TOP, fill = X)
 mini_julia.pack(side = TOP)
 label_coord_mini.pack(side = TOP)
 frame_grand_julia.pack(side = TOP, fill = X)
-label_choix_x.grid(row = 0, column = 0)
-label_choix_y.grid(row = 1, column = 0)
-label_choix_taille.grid(row = 2, column = 0)
-choix_x.grid(row = 0, column = 1, sticky = E)
-choix_y.grid(row = 1, column = 1, sticky = E)
-choix_taille.grid(row = 2, column = 1, sticky = E)
+label_choix_x.grid(row = 0, column = 0, sticky = E)
+label_choix_y.grid(row = 1, column = 0, sticky = E)
+label_choix_taille.grid(row = 2, column = 0, sticky = E)
+choix_x.grid(row = 0, column = 1)
+choix_y.grid(row = 1, column = 1)
+choix_taille.grid(row = 2, column = 1)
 bouton_julia.grid(row = 3, column = 0, columnspan = 2)
 ### Fin disposition des widgets
 
