@@ -5,6 +5,22 @@ import sys
 from colorsys import *
 from cmath import *
 
+
+#Multiplier un truple par un scalaire
+#REND UN TRUPLE **ENTIER**
+def mult_tpl(t, v):
+	a = int(t*v[0])
+	b = int(t*v[1])
+	c = int(t*v[2])
+	return (a, b, c)
+
+#Additionne deux truples
+def add_tpl(v, w):
+	a = v[0] + w[0]
+	b = v[1] + w[1]
+	c = v[2] + w[2]
+	return (a, b, c)
+
 #Fonction de coloration d'un complexe
 def couleur_complexe(z, largeur = 2.8):
 	teinte = phase(z)/(2*pi)
@@ -14,6 +30,13 @@ def couleur_complexe(z, largeur = 2.8):
 	c_2 = int(col[1])
 	c_3 = int(col[2])
 	return (c_1, c_2, c_3)
+
+#Fonction de coloration pour un truc zoli :)
+def coloration_zoli(n, n_max, col_a, col_b):
+	h = add_tpl(col_b, mult_tpl(-1, col_a))
+	t = ((n_max - n)/float(n_max))**5
+	res = add_tpl(col_a, mult_tpl(t, h))
+	return res
 
 # Fonction qui aligne du texte à droite dans un espace de t_max caractères
 def ecrire(chaine, t_max):
