@@ -117,7 +117,7 @@ def ch_coord(k, l, taille, largeur, centre):
 		))
 
 # Demande à l'utilisateur s'il veut l'enregistrer et gère les versions
-def enregistre(image, nom, dossier = 'Images'):
+def enregistre(image, nom, nom_dossier = 'Images'):
 	# On demande à l'utilisateur de faire un choix
 	reponse = ''
 	while (reponse != 'o') and (reponse != 'n'):
@@ -147,12 +147,12 @@ def enregistre(image, nom, dossier = 'Images'):
 				reponse = reponse.lower()
 			if reponse == 'o':
 				# Sauvegarde dans le dossier choisi
-				image.save('{dossier}/{nom}_{taille}px.png'.format(dossier = dossier, nom = nom, taille = taille))
+				image.save('{dossier}/{nom}_{taille}px.png'.format(dossier = nom_dossier, nom = nom, taille = taille))
 				print("Image enregistrée")
 			else:
 				print('Image non enregistrée')
 		else:
-			image.save('{dossier}/{nom}_{taille}px.png'.format(dossier = dossier, nom = nom, taille = taille))
+			image.save('{dossier}/{nom}_{taille}px.png'.format(dossier = nom_dossier, nom = nom, taille = taille))
 			print('Image enregistrée')
 	# L'utilisateur ne veut pas enregistrer
 	else:
