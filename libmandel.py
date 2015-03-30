@@ -31,10 +31,10 @@ def cree_mandelbrot(taille = 600, n_max = 200, centre = -0.7, largeur = 2.8, alp
 	print("\nImage Générée") # Retour à la ligne
 	return(image)
 
-# Fonction qui trace un ensemble de mandelbrot en couleur !
-def cree_mandelbrot_couleur(taille = 600, n_max = 200, centre = -0.7, largeur = 2.8, alpha = 5):
+# Fonction qui trace un ensemble de mandelbrot en couleur ! Et c'est moche :)
+def cree_mandelbrot_couleur_moche(taille = 600, n_max = 200, centre = -0.7, largeur = 2.8, alpha = 5):
 	# Déclaration de l'image
-	image = Image.new('RGB', (taille, taille), (255, 255, 255))
+	image = Image.new('RGB', git(taille, taille), (255, 255, 255))
 	# Outil de dessin
 	draw = ImageDraw.Draw(image)
 	for k in range(taille):
