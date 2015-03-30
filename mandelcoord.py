@@ -84,7 +84,6 @@ def grand_julia():
 		pass
 # On associe le bouton à la fonction grand_julia
 bouton_julia['command'] = grand_julia
-
 # Fonction qui crée un julia et l'affiche dans le label mini_julia
 def affiche_julia(event):
 	global miniature
@@ -98,7 +97,6 @@ def affiche_julia(event):
 	var_choix_y.set(str(y))
 # On associe l'événement 'clic de souris' à affiche_julia
 mandel.bind('<Button-1>', affiche_julia)
-
 ### Fin grand Julia
 
 ### Disposition des widgets

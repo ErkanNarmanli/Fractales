@@ -2,6 +2,8 @@
 # -*-coding:utf-8 -*-
 
 import sys
+import os
+import re
 from colorsys import *
 from cmath import *
 
@@ -71,8 +73,49 @@ def ch_coord(k, l, taille, largeur, centre):
 		(float(l) - taille/2.)*largeur/float(taille) \
 		))
 
-# Détermine la couleur du pixel en fonction du rang à partir
-# duquel on sort du cercle de rayon 2
+# Demande à l'utilisateur s'il veut l'enregistrer et gère les versions
+def enregistre(image, nom, dossier = 'Images'):
+	# On demande à l'utilisateur de faire un choix
+	reponse = ''
+	while (reponse != 'o') and (reponse != 'n'):
+		reponse = raw_input("Voulez-vous sauvegarder l'image ?[O/n] : ")
+		reponse = reponse.lower()
+	# Début des vérifications
+	if reponse == "o":
+		# On récupère la liste des fichier
+		dossier = os.listdir('Images')
+		# On échappe les . et les +
+		expression = '^{}_([0-9]+)px\\.png$'.format(nom.replace('.', '\\.').replace('+', '\\+')) 
+		expression = re.compile(expression) # regex compilée
+		# On cherche les autres versions de la même image
+		versions = [fichier for fichier in dossier \
+			if expression.match(fichier) ]
+		if versions != []:
+			# On génère la liste des tailles en pixels des images déjà enregistrées
+			versions_tailles = [int(expression.sub('\\1', fichier)) for fichier in versions]
+			print("Cette image est déjà enregistrée dans les tailles suivantes :")
+			for i in versions_tailles:
+				print(i)
+			# On attend une réponse de l'utilisateur
+			reponse = ''
+			while (reponse != 'o') and (reponse != 'n'):
+				reponse = raw_input("Enregistrer quand même ?[O/n] : ")
+				reponse = reponse.lower()
+			if reponse == 'o':
+				# Sauvegarde dans le dossier choisi
+				image.save('{dossier}/{nom}_{taille}px.png'.format(dossier = dossier, nom = nom, taille = taille))
+				print("Image enregistrée")
+			else:
+				print('Image non enregistrée')
+		else:
+			image.save('{dossier}/{nom}_{taille}px.png'.format(dossier = dossier, nom = nom, taille = taille))
+			print('Image enregistrée')
+	# L'utilisateur ne veut pas enregistrer
+	else:
+		print("Image non enregistrée")
+
+# Détermine la couleur du pixel sur une echelle de gris en
+# fonction du rang à partir duquel on sort du cercle de rayon 2
 def couleur_pix(n, n_max, alpha = 5):
 	if n == n_max:
 		c = 0
@@ -80,4 +123,14 @@ def couleur_pix(n, n_max, alpha = 5):
 		c = 20 + 235*((n_max - n)/float(n_max))**alpha
 		c = int(c)
 	return(c, c, c)
+
+# Autre façon de colorier (toujours en noir en echelle de gris)
+def couleur_pix_v2(n, n_max, n_min = 0, alpha = 5):
+	if n == n_max:
+		c = 0
+	else:
+		c = 20 + 235*((n_max - n)/float(n_max - n_min))**alpha
+		c = int(c)
+	return(c, c, c)
+
 
