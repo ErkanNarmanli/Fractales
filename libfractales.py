@@ -101,7 +101,7 @@ def chargement(k, taille):
 	sys.stdout.write('\r')
 	ecrire("{}% : ".format(pourc), 7)
 	ecrire(str(k+1), len(str(taille)))
-	sys.stdout.write('/{} pix'.format(taille))
+	sys.stdout.write('/{} item'.format(taille))
 	sys.stdout.write('   [')
 	for m in range(pourv):
 		sys.stdout.write(':')
