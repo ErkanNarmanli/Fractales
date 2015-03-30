@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*-coding:utf-8 -*-
 
+
 import sys
 import os
 import re
@@ -124,6 +125,7 @@ def enregistre(image, nom, dossier = 'Images'):
 		reponse = reponse.lower()
 	# Début des vérifications
 	if reponse == "o":
+		taille = image.size[0]
 		# On récupère la liste des fichier
 		dossier = os.listdir('Images')
 		# On échappe les . et les +
