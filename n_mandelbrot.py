@@ -5,6 +5,7 @@ from PIL import Image, ImageDraw, ImageFont
 import sys
 from cmath import *
 
+
 # Constantes
 centre = 0 	# -0.7
 try:

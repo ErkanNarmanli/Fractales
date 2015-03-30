@@ -19,6 +19,9 @@ draw = ImageDraw.Draw(image)
 
 #Fonction de coloration d'un complexe
 def couleur_complexe(z):
+	"""Fonction de coloration d'un complexe
+	la teinte dépend de l'argument
+	la saturation dépend du module"""
 	teinte = phase(z)/(2*pi)
 	lumino = max(0, (1-abs(z)/largeur))
 	col = hls_to_rgb(teinte, 150, lumino)
