@@ -28,7 +28,7 @@ def cree_mandelbrot(taille = 600, n_max = 200, centre = -0.7, largeur = 2.8, alp
 				col = couleur_pix(n, n_max, alpha = alpha)
 			draw.point((k, l), fill=col)
 			draw.point((k, taille-l), fill=col) # On utilise l'invariance par conjugaison
-	print("\nImage Générée") # Retour à la ligne
+	print("  Image Générée") # Retour à la ligne
 	return(image)
 
 # Fonction qui trace un ensemble de mandelbrot en couleur ! Et c'est moche :)
@@ -56,11 +56,11 @@ def cree_mandelbrot_couleur_moche(taille = 600, n_max = 200, centre = -0.7, larg
 				col = couleur_complexe(u)
 			draw.point((k, l), fill=col)
 			draw.point((k, taille-l), fill=col) # On utilise l'invariance par conjugaison
-	print("\nImage Générée") # Retour à la ligne
+	print("  Image Générée") # Retour à la ligne
 	return(image)
 
 # Fonction qui trace un ensemble de mandelbrot zoli
-def cree_mandelbrot_zoli(taille = 600, n_max = 200, centre = -0.7, largeur = 2.8, alpha = 5, couleur_fond = (27, 45, 66), couleur_bord = (163, 183, 205)):
+def cree_mandelbrot_zoli(taille = 600, n_max = 200, centre = -0.7, largeur = 2.8, alpha = 5, couleur_fond = (27, 45, 66), couleur_bord = (163, 183, 205), couleur_mandel = (0,0,0)):
 	# Déclaration de l'image
 	image = Image.new('RGB', (taille, taille), (255, 255, 255))
 	# Outil de dessin
@@ -73,17 +73,17 @@ def cree_mandelbrot_zoli(taille = 600, n_max = 200, centre = -0.7, largeur = 2.8
 			n = 0
 			# Si on est dans la cardioïde, on ne fait pas les tests
 			if 2*abs(c-0.25) < (1 - cos(phase(c-0.25))).real:
-				col = (0,0,0)
+				col = couleur_mandel
 			else:
 				while abs(u) <= 2 and n < n_max:
 					u = u*u + c
 					n = n + 1
 				if n == n_max:
-					col = (0,0,0)
+					col = couleur_mandel
 				else:
 					col = coloration_zoli(n, n_max, couleur_bord, couleur_fond)
 			draw.point((k, l), fill=col)
 			draw.point((k, taille-l), fill=col) # On utilise l'invariance par conjugaison
-	print("\nImage Générée") # Retour à la ligne
+	print("  Image Générée") # Retour à la ligne
 	return(image)
 

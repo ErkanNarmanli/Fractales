@@ -3,9 +3,10 @@
 
 from libmandel import *
 
-taille = 1000 
+taille = 10000 
 
-image = cree_mandelbrot_zoli(taille = taille, couleur_fond = (16,27,37) , couleur_bord = (94, 40, 0))
+image = cree_mandelbrot_zoli(taille = taille, couleur_fond = (20,20,20) , couleur_bord = (220, 220, 220), couleur_mandel = (5,5,5))
+
 image = ameliore_bord(image, taille)
 image.show()
 

@@ -11,6 +11,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 #Améliore les bords du contour de la fractale
 def ameliore_bord(image, taille):
+	print("Lissage de l'image")
 	draw = ImageDraw.Draw(image)
 	for k in range(taille):
 		chargement(k, taille)
@@ -18,6 +19,7 @@ def ameliore_bord(image, taille):
 			if image.getpixel((k,l)) == (0,0,0):
 				if not voisin_noirs((k,l), image):
 					draw.point((k,l), moyenne((k,l), image))	
+	print("\n")
 	return image
 
 #Rend TRUE si (k,l) a au moins un voisin noir
@@ -79,7 +81,7 @@ def couleur_complexe(z, largeur = 2.8):
 #Fonction de coloration pour un truc zoli :)
 def coloration_zoli(n, n_max, col_a, col_b):
 	h = add_tpl(col_b, mult_tpl(-1, col_a))
-	t = ((n_max - n)/float(n_max))**5
+	t = ((n_max - n)/float(n_max))**10
 	res = add_tpl(col_a, mult_tpl(t, h))
 	return res
 
