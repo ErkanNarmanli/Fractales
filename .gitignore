@@ -1,0 +1,5 @@
+#Les lignes qui commencent par '#' sont des commentaires :)
+#On ignore les fichiers suivants
+test.py		#sert de défouloire personnel, on ne l'add pas.
+*.pyc		#les fichiers compilés .pyc, useless
+.git		#logique
