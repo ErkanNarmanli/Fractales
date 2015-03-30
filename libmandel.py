@@ -60,7 +60,7 @@ def cree_mandelbrot_couleur_moche(taille = 600, n_max = 200, centre = -0.7, larg
 	return(image)
 
 # Fonction qui trace un ensemble de mandelbrot zoli
-def cree_mandelbrot_zoli(taille = 600, n_max = 200, centre = -0.7, largeur = 2.8, alpha = 5):
+def cree_mandelbrot_zoli(taille = 600, n_max = 200, centre = -0.7, largeur = 2.8, alpha = 5, couleur_fond = (27, 45, 66), couleur_bord = (163, 183, 205)):
 	# Déclaration de l'image
 	image = Image.new('RGB', (taille, taille), (255, 255, 255))
 	# Outil de dessin
@@ -81,7 +81,7 @@ def cree_mandelbrot_zoli(taille = 600, n_max = 200, centre = -0.7, largeur = 2.8
 				if n == n_max:
 					col = (0,0,0)
 				else:
-					col = coloration_zoli(n, n_max, (163, 183, 205), (27, 45, 66))
+					col = coloration_zoli(n, n_max, couleur_bord, couleur_fond)
 			draw.point((k, l), fill=col)
 			draw.point((k, taille-l), fill=col) # On utilise l'invariance par conjugaison
 	print("\nImage Générée") # Retour à la ligne

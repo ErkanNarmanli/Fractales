@@ -1,15 +1,56 @@
 #!/usr/bin/python
 # -*-coding:utf-8 -*-
 
-# comment useless
 
 import sys
 import os
 import re
 from colorsys import *
 from cmath import *
+from PIL import Image, ImageDraw, ImageFont
 
+#Améliore les bords du contour de la fractale
+def ameliore_bord(image, taille):
+	draw = ImageDraw.Draw(image)
+	for k in range(taille):
+		chargement(k, taille)
+		for l in range (taille):
+			if image.getpixel((k,l)) == (0,0,0):
+				if not voisin_noirs((k,l), image):
+					draw.point((k,l), moyenne((k,l), image))	
+	return image
 
+#Rend TRUE si (k,l) a au moins un voisin noir
+def voisin_noirs((k,l), image):
+	return((image.getpixel((k-1, l-1)) == (0,0,0)) \
+		or (image.getpixel((k-1, l)) == (0,0,0)) \
+		or (image.getpixel((k-1, l+1)) == (0,0,0)) \
+		or (image.getpixel((k-1, l-1)) == (0,0,0)) \
+		or (image.getpixel((k, l-1)) == (0,0,0)) \
+		or (image.getpixel((k, l+1)) == (0,0,0)) \
+		or (image.getpixel((k+1, l-1)) == (0,0,0)) \
+		or (image.getpixel((k+1, l)) == (0,0,0)) \
+		or (image.getpixel((k-1, l+1)) == (0,0,0)))
+
+#Rend la moyenne des prixels à coté
+def moyenne((k,l), image):
+	tot = (0,0,0)
+	tot = add_tpl(tot, (image.getpixel((k-1, l-1))))
+	tot = add_tpl(tot, (image.getpixel((k-1, l))))
+	tot = add_tpl(tot, (image.getpixel((k-1, l+1))))
+	tot = add_tpl(tot, (image.getpixel((k, l-1))))
+	tot = add_tpl(tot, (image.getpixel((k, l+1))))
+	tot = add_tpl(tot, (image.getpixel((k+1, l-1))))
+	tot = add_tpl(tot, (image.getpixel((k+1, l))))
+	tot = add_tpl(tot, (image.getpixel((k+1, l+1))))
+	tot = mult_tpl(0.125, tot)
+	return tot
+	
+	
+	
+	
+	
+	
 #Multiplier un truple par un scalaire
 #REND UN TRUPLE **ENTIER**
 def mult_tpl(t, v):
