@@ -9,6 +9,7 @@ import sys
 
 
 def cree_julia(taille=600, c = 0, n_max = 200, alpha = 5, largeur = 4.2):
+	t = time.time()
 	# Déclaration de l'image
 	image = Image.new('RGB', (taille, taille), (255, 255, 255))
 	# Outil de dessin
@@ -25,6 +26,7 @@ def cree_julia(taille=600, c = 0, n_max = 200, alpha = 5, largeur = 4.2):
 			draw.point((k, l), fill=col)
 			draw.point((taille-k,taille-l), fill=col)
 	print("\nImage générée")
+	print("Temps d'exécution : {} s".format(time.time() - t))
 	return(image)
 
 
