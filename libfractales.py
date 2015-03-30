@@ -48,11 +48,6 @@ def moyenne((k,l), image):
 	tot = mult_tpl(0.125, tot)
 	return tot
 	
-	
-	
-	
-	
-	
 def mult_tpl(t, v):
 	"""Multiplie un truple par un scalaire
 	REND UN TRUPLE ***ENTIER***"""
@@ -115,16 +110,17 @@ def chargement(k, taille):
 	sys.stdout.write(']')
 	sys.stdout.flush() # Rend l'affichage plus fluide
 
-# Détermine les coordonnées dans le plan complexe
-# à partir des coordonnées dans l'image
 def ch_coord(k, l, taille, largeur, centre):
+	""" Détermine les coordonnées dans le plan complexe du pixel k,l """
 	return(complex( \
 		(float(k) - taille/2.)*largeur/float(taille) + centre, \
 		(float(l) - taille/2.)*largeur/float(taille) \
 		))
 
-# Demande à l'utilisateur s'il veut l'enregistrer et gère les versions
 def enregistre(image, nom, nom_dossier = 'Images'):
+	""" On demande à l'utilisateur s'il souhaite enregistrer l'image.
+	Le cas échéant, on cherche dans le dossier 'nom_dossier' d'autres versions de la même image qu'on présente à l'utilisateur.
+	On demande ensuite une confirmation si d'autres versions existent """
 	# On demande à l'utilisateur de faire un choix
 	reponse = ''
 	while (reponse != 'o') and (reponse != 'n'):
@@ -165,9 +161,9 @@ def enregistre(image, nom, nom_dossier = 'Images'):
 	else:
 		print("Image non enregistrée")
 
-# Détermine la couleur du pixel sur une echelle de gris en
-# fonction du rang à partir duquel on sort du cercle de rayon 2
+# Fonction pour la coloration
 def couleur_pix(n, n_max, alpha = 5):
+	""" Assigne une couleur en fonction du rang n à partir duquel la suite qui intervient dans la définition du mandelbrot dépasse le module 2 """
 	if n == n_max:
 		c = 0
 	else:
@@ -175,7 +171,7 @@ def couleur_pix(n, n_max, alpha = 5):
 		c = int(c)
 	return(c, c, c)
 
-# Autre façon de colorier (toujours en noir en echelle de gris)
+# Autre coloration
 def couleur_pix_v2(n, n_max, n_min = 0, alpha = 5):
 	if n == n_max:
 		c = 0
