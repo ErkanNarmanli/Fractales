@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*-coding:utf-8 -*-
 
+# comment useless
+
 import sys
 import os
 import re
