@@ -2,6 +2,18 @@
 # -*-coding:utf-8 -*-
 
 import sys
+from colorsys import *
+from cmath import *
+
+#Fonction de coloration d'un complexe
+def couleur_complexe(z, largeur = 2.8):
+	teinte = phase(z)/(2*pi)
+	lumino = max(0, (1-abs(z)/largeur))
+	col = hls_to_rgb(teinte, 150, lumino)
+	c_1 = int(col[0])
+	c_2 = int(col[1])
+	c_3 = int(col[2])
+	return (c_1, c_2, c_3)
 
 # Fonction qui aligne du texte à droite dans un espace de t_max caractères
 def ecrire(chaine, t_max):
