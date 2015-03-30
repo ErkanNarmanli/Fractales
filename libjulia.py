@@ -8,14 +8,15 @@ import time
 import sys
 
 
-def cree_julia(taille=600, c = 0, n_max = 200, alpha = 5, largeur = 4.2):
+def cree_julia(taille=600, c = 0, n_max = 200, alpha = 5, largeur = 4.2, verbose = True):
 	t = time.time()
 	# Déclaration de l'image
 	image = Image.new('RGB', (taille, taille), (255, 255, 255))
 	# Outil de dessin
 	draw = ImageDraw.Draw(image)
 	for k in range(taille):
-		chargement(k, taille)
+		if verbose:
+			chargement(k, taille)
 		for l in range(taille/2+1):
 			u = ch_coord(k,l,taille, largeur, 0)
 			n = 0
@@ -25,8 +26,9 @@ def cree_julia(taille=600, c = 0, n_max = 200, alpha = 5, largeur = 4.2):
 			col = couleur_pix(n, n_max, alpha)
 			draw.point((k, l), fill=col)
 			draw.point((taille-k,taille-l), fill=col)
-	print("\nImage générée")
-	print("Temps d'exécution : {} s".format(time.time() - t))
+	if verbose:
+		print("\nImage générée")
+		print("Temps d'exécution : {} s".format(time.time() - t))
 	return(image)
 
 
