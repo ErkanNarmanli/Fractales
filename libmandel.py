@@ -65,7 +65,7 @@ def cree_mandelbrot_couleur_moche(taille = 600, n_max = 200, centre = -0.7, larg
 	print("  Image Générée") # Retour à la ligne
 	return(image)
 
-def cree_mandelbrot_zoli(taille = 600, n_max = 200, centre = -0.7, largeur = 2.8, alpha = 5, couleur_fond = (27, 45, 66), couleur_bord = (163, 183, 205), couleur_mandel = (0,0,0)):
+def cree_mandelbrot_zoli(taille = 600, n_max = 200, centre = -0.7, largeur = 2.8, couleur_fond = (27, 45, 66), couleur_bord = (163, 183, 205), couleur_mandel = (0,0,0)):
 	"""Trace un ensemble de Mandelbrot avec un dégradé
 	C'est zoli :)"""
 	# Déclaration de l'image

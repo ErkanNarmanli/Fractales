@@ -117,11 +117,11 @@ def ch_coord(k, l, taille, largeur, centre):
 		(float(l) - taille/2.)*largeur/float(taille) \
 		))
 
-def inv_ch_coord(x, y, taille, largeur, centre):
+def inv_ch_coord(c, taille, largeur, centre):
 	""" Fonction inverse de la fonction ch_coord
 	Retourne des entiers """
 	x, y = c.real, c.imag
-	k = int((x-c)*taille/float(largeur) + taille/2.)
+	k = int((x-centre)*taille/float(largeur) + taille/2.)
 	l = int(y*taille/float(largeur) + taille/2.)
 	return(k, l)
 
