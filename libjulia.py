@@ -66,21 +66,34 @@ def cree_julia_zoli(taille=600, c = 0, n_max = 200, largeur = 4.2, couleur_fond 
 
 
 # Ne fonctionne pas encore, et pas sûr que ce soit mieux ...
-def cree_julia_mieux(taille = 600, c = 0, n_max = 200, lg_queue = 10, alpha = 5, largeur= 4.2):
+def cree_julia_mieux(taille = 600, c = 0, n_max = 200, alpha = 5, largeur= 4.2):
 	""" Fonction améliorée pour calculer plus rapidement les Julia """
 	t = time.time()
+	
 	# Matrice contenant dans chaque case le nombre d'itérations nécessaires
 	# pour que la suite partant du complexe correspondant à [k, l] dépasse 2 en module
 	matrice = np.ones((taille, taille))
 	matrice = (-1)*matrice
+	# Déclaration de l'image
+	image = Image.new('RGB', (taille, taille), (255, 255, 255))
+	# Outil de dessin
+	draw = ImageDraw.Draw(image)
+	
+	# Fonction pour colorer un pixel
+	def colore(i, j, n):
+		col = couleur_pix(n, n_max, alpha)
+		draw.point((i, j), fill = col)
+		# On utilise l'invariance par rotation d'angle pi
+		draw.point((taille  -1 - i, taille - j), fill = col)
+
 	for k in range(taille):
 		chargement(k, taille)
-		for l in range(taille):
+		for l in range(taille/2 + 1):
 			# On regarde si le pixel a déjà été traité
 			if matrice[k, l] == -1:
 				# Initialisation
 				v = ch_coord(k, l, taille, largeur, 0)
-				u = v
+				u = ch_coord(k, l, taille, largeur, 0)
 				n = 0
 				continuer = True
 				# On calcule les termes de la suite, on sort de la boucle si :
@@ -90,46 +103,36 @@ def cree_julia_mieux(taille = 600, c = 0, n_max = 200, lg_queue = 10, alpha = 5,
 				while continuer:
 					u = u*u + c
 					n = n + 1
-					# On retombe sur un terme déjà calculé
 					i, j = inv_ch_coord(u, taille, largeur, 0)
 					# Si on sort de la fenêtre, il faut poser k = 0
 					if (i < taille) and (j < taille) and (i >= 0) and (j >= 0):
-						k = matrice[i, j]
+						n_mat = matrice[i, j]
 					else:
-						k = 0
-					if k != -1:
+						n_mat = 0
+					# On retombe sur un terme déjà calculé
+					if n_mat != -1:
 						continuer = False
 						for m in range(n):
 							a, b = inv_ch_coord(v, taille, largeur, 0)
-							matrice[a, b] = min(n_max, n + k - m)
+							matrice[a, b] = min(n_max, n + n_mat - m)
+							colore(a, b, min(n_max, n + n_mat - m))
 							v = v*v + c
 					# On atteint n_max
 					elif n == n_max:
 						continuer = False
 						matrice[k, l] = n_max
+						colore(k, l, n_max)
 					# le module de u dépasse 2
 					elif abs(u) > 2:
 						continuer = False
 						for m in range(n):
 							a, b = inv_ch_coord(v, taille, largeur, 0)
 							matrice[a, b] = n - m
+							colore(a, b, n - m)
 							v = v*v + c
 					# Si on ne remplit aucune des conditions précédentes,
 					# on refait un tour de boucle
-	# On a rempli la matrice, il ne reste qu'à colorier l'image
-	print("\nGénération de l'image")
-	print(matrice)
-	# Déclaration de l'image
-	image = Image.new('RGB', (taille, taille), (255, 255, 255))
-	# Outil de dessin
-	draw = ImageDraw.Draw(image)
-	for k in range(taille):
-		for l in range(taille):
-			col = couleur_pix(matrice[k, l], n_max, alpha)
-			draw.point((k, l), fill = col)
-			# On utilise l'invariance par rotation d'angle pi
-			draw.point((taille - k, taille - l), fill = col)
-	print("Image générée")
+	print("    Image générée")
 	print("Temps d'exécution : {} s".format(time.time() - t))
 	return(image)
 
