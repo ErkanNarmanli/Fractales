@@ -1,6 +1,11 @@
 #!/usr/bin/python
 # -*-coding:utf-8 -*
 
+"""
+Outil interactif avec interface graphique pour obtenir les coordonnées d'un point précis
+et avoir des apperçus d'ensembles de Julia
+"""
+
 from Tkinter import *
 from PIL import Image, ImageTk
 from libjulia import *

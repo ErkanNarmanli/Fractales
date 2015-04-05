@@ -1,6 +1,10 @@
 #!/usr/bin/python
 # -*-coding:utf-8 -*
 
+"""
+Fonctions dessinant des ensembles de mandelbrot
+"""
+
 from PIL import Image, ImageDraw, ImageFont
 from cmath import *
 from colorsys import *

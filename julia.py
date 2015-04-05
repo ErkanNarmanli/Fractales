@@ -1,6 +1,10 @@
 #!/usr/bin/python
 # -*-coding:utf-8 -*
 
+"""
+Script interactif pour dessiner des ensembels des Julia
+"""
+
 from PIL import Image, ImageDraw, ImageFont
 from math import sqrt
 import os

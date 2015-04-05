@@ -1,6 +1,10 @@
 #!/usr/bin/python
 # -*-coding:utf-8 -*
 
+"""
+Script calculant suufisemment d'ensembles de Julia pour faire une animations
+"""
+
 from libjulia import *
 from cmath import *
 from time import time

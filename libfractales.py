@@ -1,6 +1,9 @@
 #!/usr/bin/python
 # -*-coding:utf-8 -*-
 
+"""
+Fonctions utiles partout
+""" 
 
 import sys
 import os

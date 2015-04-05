@@ -1,6 +1,10 @@
 #!/usr/bin/python
 # -*-coding:utf-8 -*
 
+"""
+Fonctions dessinant des ensembles de Julia
+"""
+
 from libfractales import *
 from PIL import Image, ImageDraw
 from math import sqrt
@@ -72,7 +76,7 @@ def cree_julia_mieux(taille = 600, c = 0, n_max = 200, alpha = 5, largeur= 4.2):
 	
 	# Matrice contenant dans chaque case le nombre d'itérations nécessaires
 	# pour que la suite partant du complexe correspondant à [k, l] dépasse 2 en module
-	matrice = np.ones((taille, taille))
+	matrice = np.ones((taille, taille + 1)) # +1 car lorsqu'on utilise la symétrie, on est obligés de dépasser
 	matrice = (-1)*matrice
 	# Déclaration de l'image
 	image = Image.new('RGB', (taille, taille), (255, 255, 255))
@@ -83,8 +87,6 @@ def cree_julia_mieux(taille = 600, c = 0, n_max = 200, alpha = 5, largeur= 4.2):
 	def colore(i, j, n):
 		col = couleur_pix(n, n_max, alpha)
 		draw.point((i, j), fill = col)
-		# On utilise l'invariance par rotation d'angle pi
-		draw.point((taille  -1 - i, taille - j), fill = col)
 
 	for k in range(taille):
 		chargement(k, taille)
@@ -115,20 +117,32 @@ def cree_julia_mieux(taille = 600, c = 0, n_max = 200, alpha = 5, largeur= 4.2):
 						for m in range(n):
 							a, b = inv_ch_coord(v, taille, largeur, 0)
 							matrice[a, b] = min(n_max, n + n_mat - m)
-							colore(a, b, min(n_max, n + n_mat - m))
+							col = couleur_pix(n, n_max, alpha)
+							draw.point((a, b), fill = col)
+							# On utilise l'invariance par rotation d'angle pi
+							matrice[taille - a - 1, taille - b] = min(n_max, n + n_mat - m)
+							draw.point((taille - a - 1, taille - b), fill = col)
 							v = v*v + c
 					# On atteint n_max
 					elif n == n_max:
 						continuer = False
 						matrice[k, l] = n_max
-						colore(k, l, n_max)
+						col = couleur_pix(n_max, n_max, alpha)
+						draw.point((k, l), fill = col)
+						# On utilise l'invariance par rotation d'angle pi
+						matrice[taille - 1 - k, taille - l] = n_max
+						draw.point((taille - 1 - k, taille - l), fill = col)
 					# le module de u dépasse 2
 					elif abs(u) > 2:
 						continuer = False
 						for m in range(n):
 							a, b = inv_ch_coord(v, taille, largeur, 0)
 							matrice[a, b] = n - m
-							colore(a, b, n - m)
+							col = couleur_pix(n-m, n_max, alpha)
+							draw.point((a, b), fill = col)
+							# On utilise l'invariance par rotation d'angle pi
+							matrice[taille - 1 - a, taille - b]
+							draw.point((taille - 1 - a, taille - b), fill = col)
 							v = v*v + c
 					# Si on ne remplit aucune des conditions précédentes,
 					# on refait un tour de boucle
