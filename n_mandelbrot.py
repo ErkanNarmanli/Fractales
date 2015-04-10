@@ -18,11 +18,11 @@ try:
 except:
 	taille = 600 	# 700
 try:
-	puis_r = int(sys.argv[2])
+	puis_r = float(sys.argv[2])
 except:
 	puis_r = 3 
 try:
-	puis_i = int(sys.argv[3])
+	puis_i = float(sys.argv[3])
 except:
 	puis_i = 0
 
@@ -38,10 +38,10 @@ draw = ImageDraw.Draw(image)
 
 # Parcours
 for k in range(taille):
-	chargement(k)
+	chargement(k, taille)
 	for l in range(taille):
 		u = complex(0,0)
-		c = ch_coord(k, l)
+		c = ch_coord(k, l, taille, largeur, 0)
 		n = 0
 		while abs(u) <= 2 and n < n_max:
 			if u != 0:
@@ -49,7 +49,7 @@ for k in range(taille):
 			else:
 				u = c
 			n = n + 1
-		col = couleur_pix(n)
+		col = couleur_pix(n, n_max, alpha)
 		draw.point((k, l), fill=col)
 sys.stdout.write("\n")
 
