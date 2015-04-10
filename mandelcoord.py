@@ -85,6 +85,7 @@ def grand_julia():
 		c = complex(float(var_choix_x.get()), float(var_choix_y.get()))
 		image = cree_julia(taille = taille, c = c)
 		image.show()
+		image.save('Images/julia_{}+i{}_{}px.png'.format(c.real, c.imag, taille))
 	except:		# Si les arguments passés ne sont pas corrects, on ne fait rien
 		pass
 # On associe le bouton à la fonction grand_julia
