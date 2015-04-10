@@ -113,19 +113,29 @@ def chargement(k, taille):
 	sys.stdout.write(']')
 	sys.stdout.flush() # Rend l'affichage plus fluide
 
+# Utile dans in_ch_coord
+def arrondi(x):
+	""" Renvoit l'entier le plus proche de x """
+	x_inf = int(x)
+	x_sup = x_inf +  1
+	if x - x_inf < x_sup - x:
+		return(x_inf)
+	else:
+		return(x_sup)
+
 def ch_coord(k, l, taille, largeur, centre):
 	""" Détermine les coordonnées dans le plan complexe du pixel k,l """
 	return(complex( \
-		(float(k) - taille/2.)*largeur/float(taille) + centre, \
-		(float(l) - taille/2.)*largeur/float(taille) \
+		(float(k) + 0.5 - taille/2.)*largeur/float(taille) + centre, \
+		(float(l) + 0.5 - taille/2.)*largeur/float(taille) \
 		))
 
 def inv_ch_coord(c, taille, largeur, centre):
 	""" Fonction inverse de la fonction ch_coord
 	Retourne des entiers """
 	x, y = c.real, c.imag
-	k = int((x-centre)*taille/float(largeur) + taille/2.)
-	l = int(y*taille/float(largeur) + taille/2.)
+	k = arrondi((x-centre)*taille/float(largeur) + taille/2. - 0.5)
+	l = arrondi(y*taille/float(largeur) + taille/2. - 0.5)
 	return(k, l)
 
 def enregistre(image, nom, nom_dossier = 'Images'):

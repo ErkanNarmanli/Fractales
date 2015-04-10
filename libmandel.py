@@ -36,7 +36,7 @@ def cree_mandelbrot(taille = 600, n_max = 200, centre = -0.7, largeur = 2.8, alp
 					n = n + 1
 				col = couleur_pix(n, n_max, alpha = alpha)
 			draw.point((k, l), fill=col)
-			draw.point((k, taille-l), fill=col) # On utilise l'invariance par conjugaison
+			draw.point((k, taille-l-1), fill=col) # On utilise l'invariance par conjugaison
 	print("  Image Générée") # Retour à la ligne
 	return(image)
 
@@ -65,7 +65,7 @@ def cree_mandelbrot_couleur_moche(taille = 600, n_max = 200, centre = -0.7, larg
 					n = n + 1
 				col = couleur_complexe(u)
 			draw.point((k, l), fill=col)
-			draw.point((k, taille-l), fill=col) # On utilise l'invariance par conjugaison
+			draw.point((k, taille-l-1), fill=col) # On utilise l'invariance par conjugaison
 	print("  Image Générée") # Retour à la ligne
 	return(image)
 
@@ -94,7 +94,7 @@ def cree_mandelbrot_zoli(taille = 600, n_max = 200, centre = -0.7, largeur = 2.8
 				else:
 					col = coloration_zoli(n, n_max, couleur_bord, couleur_fond)
 			draw.point((k, l), fill=col)
-			draw.point((k, taille-l), fill=col) # On utilise l'invariance par conjugaison
+			draw.point((k, taille-l-1), fill=col) # On utilise l'invariance par conjugaison
 	print("  Image Générée") # Retour à la ligne
 	return(image)
 
