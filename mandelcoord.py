@@ -14,6 +14,8 @@ from libjulia import *
 taille_img = 600
 taille_miniature = 200
 nb_decimales = 4
+gd_julia = None
+gd_julia_utd = False
 
 # Fonction indiquant les coordonnées d'un point dans le plan
 # à partir des coordonnées de la souris sur l'image
@@ -29,7 +31,7 @@ def get_coord(k, l):
 
 ### Fenêtre principale
 fenetre = Tk()
-fenetre.geometry('{}x{}'.format(taille_img + taille_miniature + 20, taille_img + 10))
+fenetre.geometry('{}x{}'.format(taille_img + taille_miniature + 40, taille_img + 10))
 fenetre.title('Position sur le Mandelbrot')
 ### Fin fenêtre principale
 
@@ -74,25 +76,36 @@ var_choix_taille = StringVar(value = '700')
 choix_x = Entry(frame_grand_julia, textvariable = var_choix_x)
 choix_y = Entry(frame_grand_julia, textvariable = var_choix_y)
 choix_taille = Entry(frame_grand_julia, textvariable = var_choix_taille)
-bouton_julia = Button(frame_grand_julia, text = 'Générer Julia')
+bouton_julia = Button(frame_grand_julia, text = 'Générer')
+bouton_save = Button(frame_grand_julia, text = 'Sauvegarder')
 label_choix_x = Label(frame_grand_julia, height = 1, text = 'x : ')
 label_choix_y = Label(frame_grand_julia, height = 1, text = 'y : ')
 label_choix_taille = Label(frame_grand_julia, height = 1, text = 'taille : ')
 # Fonction affichant un grand ensemble de julia avec les paramètres fournis par l'utilisateur
-def grand_julia():
+def affiche_grand_julia():
+	global gd_julia, gd_julia_utd
 	try:
 		taille = int(var_choix_taille.get())
 		c = complex(float(var_choix_x.get()), float(var_choix_y.get()))
 		image = cree_julia(taille = taille, c = c)
 		image.show()
-		image.save('Images/julia_{}+i{}_{}px.png'.format(c.real, c.imag, taille))
+		gd_julia = (image, 'julia_{}+i{}_{}px.png'.format(c.real, c.imag, taille))
+		gd_julia_utd = True
 	except:		# Si les arguments passés ne sont pas corrects, on ne fait rien
 		pass
-# On associe le bouton à la fonction grand_julia
-bouton_julia['command'] = grand_julia
+# On associe le bouton générer à la fonction affiche_grand_julia
+bouton_julia['command'] = affiche_grand_julia
+# Fonction qui enregistre le dernier grand julia généré
+def sauvegarde_julia():
+	global gd_julia, gd_julia_utd
+	if not gd_julia_utd:
+		affiche_grand_julia()
+	gd_julia[0].save('Images/' + gd_julia[1])
+# On associe le bouton de sauvegarde à la fonction sauvegarde_julia 
+bouton_save['command'] = sauvegarde_julia
 # Fonction qui crée un julia et l'affiche dans le label mini_julia
 def affiche_julia(event):
-	global miniature
+	global miniature, gd_julia_utd
 	x, y = get_coord(event.x, event.y)
 	y = -y # Dans Tkinter, l'axes des ordonnées est orienté à l'envers
 	miniature = ImageTk.PhotoImage(cree_julia(taille = taille_miniature, \
@@ -101,6 +114,7 @@ def affiche_julia(event):
 	label_coord_mini['text'] = 'c = {x:.4f} + {y:.4f}i'.format(x = x, y = y)
 	var_choix_x.set(str(x))
 	var_choix_y.set(str(y))
+	gd_julia_utd = False
 # On associe l'événement 'clic de souris' à affiche_julia
 mandel.bind('<Button-1>', affiche_julia)
 ### Fin grand Julia
@@ -120,7 +134,8 @@ label_choix_taille.grid(row = 2, column = 0, sticky = E)
 choix_x.grid(row = 0, column = 1)
 choix_y.grid(row = 1, column = 1)
 choix_taille.grid(row = 2, column = 1)
-bouton_julia.grid(row = 3, column = 0, columnspan = 2)
+bouton_julia.grid(row = 3, column = 0, sticky = E)
+bouton_save.grid(row = 3, column = 1, sticky = W)
 ### Fin disposition des widgets
 
 ### Boucle principale
