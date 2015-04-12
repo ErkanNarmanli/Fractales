@@ -36,10 +36,12 @@ def cree_julia(taille=600, c = 0, n_max = 200, alpha = 5, largeur = 4.2, verbose
 			col = couleur_pix(n, n_max, alpha)
 			draw.point((k, l), fill = col)		
 			draw.point((taille - 1 - k, taille - 1 - l), fill = col)
+	del draw
 	if verbose:
 		print("  Image générée")
 		print("Temps d'exécution : {} s".format(time.time() - t))
 	return(image)
+	print('hello')
 
 def cree_julia_zoli(taille=600, c = 0, n_max = 200, largeur = 4.2, couleur_fond = (27, 45, 66), couleur_bord = (163, 183, 205), couleur_julia = (0, 0, 0), verbose = True):
 	""" Fait la même chose que cree_julia avec plus de coloration
@@ -145,9 +147,5 @@ def cree_julia_mieux(taille = 600, c = 0, n_max = 200, alpha = 5, largeur= 4.2):
 	print("    Image générée")
 	print("Temps d'exécution : {} s".format(time.time() - t))
 	return(image)
-
-
-
-
 
 
