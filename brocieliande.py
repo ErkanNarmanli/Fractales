@@ -5,19 +5,20 @@ from libjulia import *
 from multiprocessing import *
 import time
 
+dossier_sav = 'Images/broceliande'
+
 t = time.time()
 
-def worker(a, b, q):
+def worker(a, b):
 	for i in range(a, b):
-		q.put(cree_julia(taille = 100, c = complex(0,i*0.01), verbose = False))
+		image = cree_julia(taille = 100, c = complex(0,i*0.01), verbose = False)
+		image.save(dossier_sav + '/img_{}.png'.format(i))
 	print('fini : {}'.format((a, b)))
 
 jobs = []
 
-images_q = Queue()
-
 for k in range(4):
-	p = Process(target = worker, args = (k*25, (k+1)*25, images_q))
+	p = Process(target = worker, args = (k*25, (k+1)*25))
 	jobs.append(p)
 	p.start()
 
@@ -34,8 +35,9 @@ t = time.time()
 for k in range(100):
 	chargement(k,100)
 	image = cree_julia(taille = 100, c = complex(0,k*(0.01)), verbose = False)
-	
+	image.save(dossier_sav + '/img_{}.png'.format(k))
+
 t_2 = time.time() - t
 
-print("Temps d'execution 2 : {}".format(t_2))
+print("\nTemps d'execution 2 : {}".format(t_2))
 
