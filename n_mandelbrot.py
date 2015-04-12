@@ -55,5 +55,6 @@ sys.stdout.write("\n")
 
 # Affichage et sauvegarde de l'image
 image.show()
-image.save('Images/mandelbrot_{}_{}px.png'.format(puis,taille))
+# Procédure d'enregistrement
+enregistre(image, 'mandelbrot_{}'.format(puiss), 'Images')
 
