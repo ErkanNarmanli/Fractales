@@ -7,6 +7,7 @@ et avoir des apperçus d'ensembles de Julia
 """
 
 from Tkinter import *
+import tkMessageBox
 from PIL import Image, ImageTk
 from libjulia import *
 
@@ -14,8 +15,6 @@ from libjulia import *
 taille_img = 600
 taille_miniature = 200
 nb_decimales = 4
-gd_julia = None
-gd_julia_utd = False
 
 # Fonction indiquant les coordonnées d'un point dans le plan
 # à partir des coordonnées de la souris sur l'image
@@ -77,32 +76,27 @@ choix_x = Entry(frame_grand_julia, textvariable = var_choix_x)
 choix_y = Entry(frame_grand_julia, textvariable = var_choix_y)
 choix_taille = Entry(frame_grand_julia, textvariable = var_choix_taille)
 bouton_julia = Button(frame_grand_julia, text = 'Générer')
-bouton_save = Button(frame_grand_julia, text = 'Sauvegarder')
 label_choix_x = Label(frame_grand_julia, height = 1, text = 'x : ')
 label_choix_y = Label(frame_grand_julia, height = 1, text = 'y : ')
 label_choix_taille = Label(frame_grand_julia, height = 1, text = 'taille : ')
 # Fonction affichant un grand ensemble de julia avec les paramètres fournis par l'utilisateur
 def affiche_grand_julia():
-	global gd_julia, gd_julia_utd
 	try:
 		taille = int(var_choix_taille.get())
 		c = complex(float(var_choix_x.get()), float(var_choix_y.get()))
 		image = cree_julia(taille = taille, c = c)
 		image.show()
-		gd_julia = (image, 'julia_{}+i{}_{}px.png'.format(c.real, c.imag, taille))
-		gd_julia_utd = True
+		answer = tkMessageBox.askquestion('Sauvegarde', "Sauvegarder l'image ?")
+		if answer == 'yes':
+			name = 'Images/julia_{}+i{}_{}px.png'.format(c.real, c.imag, taille)
+			print("{} saved".format(name))
+			image.save(name)
+		else:
+			pass
 	except:		# Si les arguments passés ne sont pas corrects, on ne fait rien
 		pass
 # On associe le bouton générer à la fonction affiche_grand_julia
 bouton_julia['command'] = affiche_grand_julia
-# Fonction qui enregistre le dernier grand julia généré
-def sauvegarde_julia():
-	global gd_julia, gd_julia_utd
-	if not gd_julia_utd:
-		affiche_grand_julia()
-	gd_julia[0].save('Images/' + gd_julia[1])
-# On associe le bouton de sauvegarde à la fonction sauvegarde_julia 
-bouton_save['command'] = sauvegarde_julia
 # Fonction qui crée un julia et l'affiche dans le label mini_julia
 def affiche_julia(event):
 	global miniature, gd_julia_utd
@@ -134,8 +128,7 @@ label_choix_taille.grid(row = 2, column = 0, sticky = E)
 choix_x.grid(row = 0, column = 1)
 choix_y.grid(row = 1, column = 1)
 choix_taille.grid(row = 2, column = 1)
-bouton_julia.grid(row = 3, column = 0, sticky = E)
-bouton_save.grid(row = 3, column = 1, sticky = W)
+bouton_julia.grid(row = 3, column = 0, columnspan = 2)
 ### Fin disposition des widgets
 
 ### Boucle principale
