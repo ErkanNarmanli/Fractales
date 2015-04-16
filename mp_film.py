@@ -8,6 +8,9 @@ import time
 dossier_sav = 'Images/broceliande'
 
 t = time.time()
+nprocs = 4
+
+img_queue = Queue()
 
 def worker(a, b):
 	for i in range(a, b):
@@ -17,8 +20,8 @@ def worker(a, b):
 
 jobs = []
 
-for k in range(4):
-	p = Process(target = worker, args = (k*25, (k+1)*25))
+for k in range(nprocs):
+	p = Process(target = worker, args = (k*100/nprocs, (k+1)*100/nprocs))
 	jobs.append(p)
 	p.start()
 
