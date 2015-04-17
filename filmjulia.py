@@ -12,7 +12,7 @@ from time import time
 NB_Images 	= 300			# Nombre d'images du clip
 depart 		= complex(0.5,0)	# point de départ
 arrivee 	= complex(-1.9,0)	# point d'arrivée
-resolution 	= 400			# taille de la vidéo (carrée)
+resolution 	= 200			# taille de la vidéo (carrée)
 epsilon		= 0.1
 
 nb_digit = len(str(NB_Images))
