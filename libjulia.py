@@ -2,7 +2,7 @@
 # -*-coding:utf-8 -*
 
 """
-Fonctions dessinant des ensembles de Julia
+Fonctions dessinant des ensembles de Julia !!
 """
 
 from libfractales import *
