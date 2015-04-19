@@ -10,20 +10,29 @@ from cmath import *
 from colorsys import *
 from libfractales import *
 
-def cree_mandelbrot(taille = 600, n_max = 200, centre = -0.7, largeur = 2.8, alpha = 5):
-	"""Trace un ensemble de Mandelbrot
+def cree_mandelbrot(taille = 600, n_max = 200, centre = complex(-0.7,0), largeur = 2.8, alpha = 5, verbose = True):
+	"""
+	Trace un ensemble de Mandelbrot
 	taille 	: l'image est au format taille*taille
 	n_max 	: entier jusqu'auquel on calcul la sortie du cercle
 	largeur	: largeur que représente taille dans le plan complexe
 	centre 	: centre de l'image dans le plan complexe
-	alpha	: exposant d'écrasement pour le dégradé de couleur"""
+	alpha	: exposant d'écrasement pour le dégradé de couleur
+	"""
 	# Déclaration de l'image
 	image = Image.new('RGB', (taille, taille), (255, 255, 255))
 	# Outil de dessin
-	draw = ImageDraw.Draw(image)
+	draw  = ImageDraw.Draw(image)
+	# On regarde si on peut utiliser la symétrie
+	if centre.imag == 0:
+		max_2 = taille/2 + 1
+	else:
+		max_2 = taille
+	# Et c'est parti mon kiki !
 	for k in range(taille):
-		chargement(k, taille)
-		for l in range(taille/2+1):
+		if verbose:
+			chargement(k, taille)
+		for l in range(max_2):
 			u = complex(0,0)
 			c = ch_coord(k, l, taille, largeur, centre)
 			n = 0
@@ -36,19 +45,26 @@ def cree_mandelbrot(taille = 600, n_max = 200, centre = -0.7, largeur = 2.8, alp
 					n = n + 1
 				col = couleur_pix(n, n_max, alpha = alpha)
 			draw.point((k, l), fill=col)
-			draw.point((k, taille-l-1), fill=col) # On utilise l'invariance par conjugaison
-	print("  Image Générée") # Retour à la ligne
+			if centre.imag == 0:
+				# On utilise l'invariance par conjugaison
+				draw.point((k, taille-l-1), fill=col)	
+	if verbose :
+		print("  Image Générée") # Retour à la ligne
 	return(image)
 
+
 def cree_mandelbrot_couleur_moche(taille = 600, n_max = 200, centre = -0.7, largeur = 2.8, alpha = 5):
-	"""Trace ensemble de mandelbrot avec tout plein de couleur
-	C'est moche"""
+	"""
+	Trace ensemble de mandelbrot avec tout plein de couleur
+	C'est moche
+	"""
 	# Déclaration de l'image
 	image = Image.new('RGB', git(taille, taille), (255, 255, 255))
 	# Outil de dessin
 	draw = ImageDraw.Draw(image)
 	for k in range(taille):
-		chargement(k, taille)
+		if verbose:
+			chargement(k, taille)
 		for l in range(taille/2+1):
 			u = complex(0,0)
 			c = ch_coord(k, l, taille, largeur, centre)
@@ -66,12 +82,15 @@ def cree_mandelbrot_couleur_moche(taille = 600, n_max = 200, centre = -0.7, larg
 				col = couleur_complexe(u)
 			draw.point((k, l), fill=col)
 			draw.point((k, taille-l-1), fill=col) # On utilise l'invariance par conjugaison
-	print("  Image Générée") # Retour à la ligne
+	if verbose:
+		print("  Image Générée") # Retour à la ligne
 	return(image)
 
 def cree_mandelbrot_zoli(taille = 600, n_max = 200, centre = -0.7, largeur = 2.8, couleur_fond = (27, 45, 66), couleur_bord = (163, 183, 205), couleur_mandel = (0,0,0)):
-	"""Trace un ensemble de Mandelbrot avec un dégradé
-	C'est zoli :)"""
+	"""
+	Trace un ensemble de Mandelbrot avec un dégradé
+	C'est zoli :)
+	"""
 	# Déclaration de l'image
 	image = Image.new('RGB', (taille, taille), (255, 255, 255))
 	# Outil de dessin

@@ -8,10 +8,6 @@ Fonctions permettant le calcul d'une liste d'ensembles de Julia
 
 """
 
-#### ENCORE À FAIRE : 
-#### Faire en sorte que les numéros dans les noms de fichiers aient tous le même nombre de digits
-#### i.e. 01 au lieu de 1 si ces numéros vont de 0 à 99
-
 from libjulia import cree_julia
 from multiprocessing import *
 import time
@@ -46,7 +42,7 @@ def launch_client(julia_dict, nb_digits = None):
 	jobs = []
 	# Si nb_digits est mal ou non spécifié, on le déduit de nb_ids
 	if type(nb_digits) != type(0):
-		nb_digits = len(str(nb_digits))
+		nb_digits = len(str(nb_ids))
 
 	for k in range(nprocs):
 		chunck = {cle: nb for cle, nb in julia_dict.items() if k*nb_ids/nprocs <= cle < (k+1)*nb_ids/nprocs}
