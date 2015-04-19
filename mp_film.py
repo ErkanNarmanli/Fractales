@@ -38,10 +38,12 @@ def launch_client(julia_dict, taille = 600, nb_digits = None, save_dir = DEFAULT
 	nb_images = len(julia_dict)
 	print('number of images : {}'.format(nb_images))
 	jobs = []
+	
 	# Si nb_digits est mal ou non spécifié, on le déduit de nb_images
 	if type(nb_digits) != int:
 		nb_digits = len(str(nb_images))
-
+	
+	# Distribution des tâches
 	for k in xrange(nprocs):
 		min_index = min(julia_dict.keys())
 		dict_size = len(julia_dict)
@@ -49,7 +51,8 @@ def launch_client(julia_dict, taille = 600, nb_digits = None, save_dir = DEFAULT
 		p = Process(target = worker, args = (little_dict , taille, nb_digits, save_dir, k))
 		jobs.append(p)
 		p.start()
-
+	
+	# On attend que tous les processus se terminent
 	for p in jobs:
 		p.join()
 

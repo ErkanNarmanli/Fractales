@@ -126,8 +126,8 @@ def arrondi(x):
 def ch_coord(k, l, taille, largeur, centre):
 	""" Détermine les coordonnées dans le plan complexe du pixel k,l """
 	return(complex( \
-		(float(k) + 0.5 - taille/2.)*largeur/float(taille) + centre, \
-		(float(l) + 0.5 - taille/2.)*largeur/float(taille) \
+		(float(k) + 0.5 - taille/2.)*largeur/float(taille) + centre.real, \
+		(float(l) + 0.5 - taille/2.)*largeur/float(taille) + centre.imag\
 		))
 
 def inv_ch_coord(c, taille, largeur, centre):
