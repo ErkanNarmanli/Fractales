@@ -2,7 +2,7 @@
 # -*-coding:utf-8 -*
 
 """
-Script calculant suufisemment d'ensembles de Julia pour faire une animations
+Script calculant suffisamment d'ensembles de Julia pour faire une animations
 """
 
 from libjulia import *

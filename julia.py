@@ -2,7 +2,7 @@
 # -*-coding:utf-8 -*
 
 """
-Script interactif pour dessiner des ensembels des Julia
+Script interactif pour dessiner des ensembles des Julia
 """
 
 from PIL import Image, ImageDraw, ImageFont
