@@ -15,7 +15,10 @@ from PIL import Image, ImageDraw, ImageFont
 def ecrire_temps(t):
 	nb_sec = t%60
 	nb_min = t/60
-	print("Temps d'exécution : {} min {} sec".format(nb_min, nb_sec))
+	if nb_min < 1:
+		print("Temps d'exécution : {} sec".format(nb_sec))
+	else:
+		print("Temps d'exécution : {} min et {} sec".format(nb_min, nb_sec))
 
 def ameliore_bord(image, taille):
 	"""Améliore les bords du contour de la fractale """
