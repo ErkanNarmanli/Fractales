@@ -12,21 +12,21 @@ from libfractales import *
 from libmandel import cree_mandelbrot
 from multiprocessing import *
 import time
+import sys
 import os
-
 
 dossier_sav = 'Images/framboisine'
 
-taille 	   = 800
-nb_images  = 1000
-nprocs	   = 4		#supprimer cet variable à terme
+taille 	   = 100
+nb_images  = 300
+nprocs	   = 300		#supprimer cet variable à terme
 verbose    = False
 
 nb_digits = len(str(nb_images)) - 1
 
 
 # Worker qui dessine et sauve les images
-def workers(mandel_dict, nb_digits, no = None):
+def workers(mandel_dict, taille, nb_digits, save_dir, no = None):
 	"""
 	Dessine une liste de Mandel et les sauve dans un dossier.
 	Reçoit en argument un dictionnaire dont les clefs sont les ids des Mandel
@@ -40,14 +40,14 @@ def workers(mandel_dict, nb_digits, no = None):
 				n_max = infos["n_max"],\
 				largeur = infos["largeur"],\
 				verbose = False)
-		image.save(dossier_sav + '/img_{}.png'\
+		image.save(save_dir + '/img_{}.png'\
 				.format(str(mandel_id+1).zfill(nb_digits)))
 
 	#print('Terminé {}'.format(no))
 
 
 # Gestion des différents processus
-def launch_client(mandel_dict, nb_digits = None):
+def launch_client(mandel_dict, taille = 600, nb_digits = None, save_dir = dossier_sav):
 	"""
 	Lance les processus calculant les mandels indiqués par le dictionnaire
 	nb_digits est le nombre de chiffres à mettre dans le noms de fichiers.
@@ -62,32 +62,33 @@ def launch_client(mandel_dict, nb_digits = None):
 	jobs = []
 	
 	# Si nb_digits est mal ou non specifié, on le déduit de nb_ids
-	if type(nb_digits) != type(0):
+	if type(nb_digits) != int:
 		nb_digits = len(str(nb_ids))
 	
-	
-	ecrire("Repartition des processus...")
-	for k in range(nprocs):
-		if verbose:
-			chargement(k, nprocs)
-		chunck 	= {cle: nb for cle, nb in mandel_dict.items() if k*nb_ids/nprocs <= cle < (k+1)*nb_ids/nprocs}		
-		p	= Process(target = workers, args = (chunck, nb_digits, k))
+	#Distribution des tâches
+	print("Repartition des processus :")
+	for k in xrange(nprocs):
+		min_index = min(mandel_dict.keys())
+		dict_size = len(mandel_dict)
+		chunck 	  = {index: c for index, c in mandel_dict.items() if min_index + k*dict_size/nprocs <= index < min_index + (k+1)*dict_size/nprocs}		
+		p	  = Process(target = workers, args = (chunck, taille, nb_digits, save_dir, k))
 		jobs.append(p)
 		p.start()
-	print("     Done!")
-	
-	ecrire("Récolte des pépites...")
+		chargement(len(jobs) - 1, nprocs)
+	print(" ")
+
+	# On attend que tous les processus se terminent
+	print("Récolte des pépites...")
 	for p in jobs:
 		p.join()
 
 		# print('Joined {}'.format(p))
-	print("     Done!")
 		
 	t_exec = time.time() - t_init
 	print("Temps d'execution : {}".format(t_exec))
 
 
-def images_zoom(pt_zoom = complex(0,0), pt_init = complex(-0.7,0), taille_min = 0.0005):
+def creer_dico(pt_zoom = complex(0,0), pt_init = complex(-0.7,0), taille_min = 05):
 	"""
 	Fonction qui génère les images pour la vidéo
 	En zoomant en changeant de centre de telle sorte que :
@@ -103,20 +104,25 @@ def images_zoom(pt_zoom = complex(0,0), pt_init = complex(-0.7,0), taille_min = 
 		dictionnaire[k]["centre"]	= pt_init + t*(pt_zoom - pt_init)
 		dictionnaire[k]["n_max"]	= 200
 		dictionnaire[k]["largeur"]	= taille_min + (2.8 - taille_min)*(1 - t)
+	return dictionnaire
 
-	launch_client(mandel_dict = dictionnaire, nb_digits = nb_digits)
 
 
 # ET HOP ! On commence à travailler !
 t_init_gen = time.time()
+
 # On vide le dossier, hein on est pas des cochons
 print("Suppression du contenu du dossier " + dossier_sav)
 os.system("cd " + dossier_sav + " ; rm *")
 
 
 # On calcule nos images :)
+print("Génération du dictionnaire des images")
+dictionnaire = creer_dico(pt_zoom = complex(-1.250666667,0.345333333))
+
+# On lance le client
 print("Calcul des images")
-images_zoom(pt_zoom = complex(-1.250666667,0.345333333))
+launch_client(mandel_dict = dictionnaire, taille = taille, nb_digits = nb_digits, save_dir = dossier_sav)
 
 # On lance la création du film
 print("Montage des images en film")

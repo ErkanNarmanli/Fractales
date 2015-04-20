@@ -29,10 +29,12 @@ def worker(julia_dict, taille, nb_digits, save_dir, no = None):
 
 # Gestion des différents processus
 def launch_client(julia_dict, taille = 600, nb_digits = None, save_dir = DEFAULT_SAVE_DIR):
-	""" Lance les processus calculant les Julias indiqués par le dictionnaire.
+	"""
+	Lance les processus calculant les Julias indiqués par le dictionnaire.
 	nb_digits est le nombre de digits à mettre dans les noms de fichiers.
 	Attention : Il faut que le nombre d'entrées de julia_dict soit divisble par nprocs sinon
-	le résultat ne sera pas le résultat attendu """
+	le résultat ne sera pas le résultat attendu
+	"""
 
 	t_init = time.time()
 	nb_images = len(julia_dict)
