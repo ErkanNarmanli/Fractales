@@ -88,14 +88,13 @@ def launch_client(mandel_dict, taille = 600, nb_digits = None, save_dir = dossie
 	print("Temps d'execution : {}".format(t_exec))
 
 
-def creer_dico(pt_zoom = complex(0,0), pt_init = complex(-0.7,0), taille_min = 05):
+def creer_dico(pt_zoom = complex(0,0), pt_init = complex(-0.7,0), taille_min = 0.005):
 	"""
 	Fonction qui génère les images pour la vidéo
 	En zoomant en changeant de centre de telle sorte que :
 		le centre initial soit pt_init
 		le centre final soit pt_zoom
 	"""
-	dictionnaire = dict()
 	dictionnaire = {}
 	for k in range(nb_images):
 		t = float(k)/nb_images
