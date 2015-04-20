@@ -1,12 +1,10 @@
 #!/usr/bin/python
 # -*-coding:utf-8 -*
 
-from mp_film import *
+n = 20
 
-dictionnaire = dict()
-dictionnaire = {}
+res = 1
+for k in range(n):
+	res = res*(k+1)
 
-for i in range(200):
-	dictionnaire[i] = complex(i/200*1.5+0.2,0)
-
-launch_client(julia_dict = dictionnaire)
+print(res)
