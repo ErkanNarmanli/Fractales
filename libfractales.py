@@ -2,7 +2,7 @@
 # -*-coding:utf-8 -*-
 
 """
-Fonctions utiles partout
+Fonctions utiles un peu partout
 """ 
 
 import sys
@@ -194,6 +194,7 @@ def couleur_pix(n, n_max, alpha = 5):
 
 # Autre coloration
 def couleur_pix_v2(n, n_max, n_min = 0, alpha = 5):
+	""" Autre coloration """
 	if n == n_max:
 		c = 0
 	else:
