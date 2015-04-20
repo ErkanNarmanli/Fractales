@@ -19,7 +19,7 @@ dossier_sav = 'Images/framboisine'
 
 taille 	   = 200
 nb_images  = 500
-nprocs	   = 300		#supprimer cet variable à terme
+nprocs	   = 50		#supprimer cet variable à terme
 verbose    = False
 
 nb_digits = len(str(nb_images)) - 1
@@ -89,8 +89,7 @@ def launch_client(mandel_dict, taille = 600, nb_digits = None, save_dir = dossie
 
 	print(" ")	
 	t_exec = time.time() - t_init
-	print("Temps d'execution : {}".format(t_exec))
-
+	ecrire_temps(t_exec)
 
 def creer_dico(pt_zoom = complex(0,0), pt_init = complex(-0.7,0), taille_min = 0.005):
 	"""
@@ -131,4 +130,4 @@ launch_client(mandel_dict = dictionnaire, taille = taille, nb_digits = nb_digits
 print("Montage des images en film")
 os.system("cd " + dossier_sav + " ; ffmpeg -v quiet -f image2 -r 10 -i img_%0{}d.png -vcodec mpeg4 -y movie.mp4".format(nb_digits))
 t_exec = time.time() - t_init_gen
-print("Temps total d'execution : {}".format(t_exec))
+ecrire_temps(t_exec)

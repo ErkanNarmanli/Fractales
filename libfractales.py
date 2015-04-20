@@ -12,6 +12,11 @@ from colorsys import *
 from cmath import *
 from PIL import Image, ImageDraw, ImageFont
 
+def ecrire_temps(t):
+	nb_sec = t%60
+	nb_min = t/60
+	print("Temps d'exécution : {} min {} sec".format(nb_min, nb_sec))
+
 def ameliore_bord(image, taille):
 	"""Améliore les bords du contour de la fractale """
 	print("Lissage de l'image")
