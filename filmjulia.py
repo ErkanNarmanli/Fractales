@@ -8,12 +8,13 @@ Script calculant suffisamment d'ensembles de Julia pour faire une animations
 from libjulia import *
 from cmath import *
 from time import time
+import os
 
-NB_Images 	= 300			# Nombre d'images du clip
+NB_Images 	= 314			# Nombre d'images du clip
 depart 		= complex(0.5,0)	# point de départ
 arrivee 	= complex(-1.9,0)	# point d'arrivée
 resolution 	= 200			# taille de la vidéo (carrée)
-epsilon		= 0.1
+epsilon		= 0.05
 
 nb_digit = len(str(NB_Images))
 
@@ -34,4 +35,4 @@ for k in range(NB_Images):
 	
 print("Création des images terminée, temps d'execution : {} s".format(time() - t))
 print('Pour finaliser faire la commande suivante dans le répertoire contenant les images :')
-print('ffmpeg -f image2 -r 10 -i Film_%0{}d.png -vcodec mpeg4 -y movie.mp4'.format(nb_digit))
+os.system('cd Images/Img_film ; ffmpeg -f image2 -r 10 -i Film_%0{}d.png -vcodec mpeg4 -y movie.mp4'.format(nb_digit))
