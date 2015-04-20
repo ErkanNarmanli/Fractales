@@ -17,8 +17,8 @@ import os
 
 dossier_sav = 'Images/framboisine'
 
-taille 	   = 100
-nb_images  = 300
+taille 	   = 200
+nb_images  = 500
 nprocs	   = 300		#supprimer cet variable à terme
 verbose    = False
 
@@ -97,7 +97,7 @@ def creer_dico(pt_zoom = complex(0,0), pt_init = complex(-0.7,0), taille_min = 0
 	"""
 	dictionnaire = {}
 	for k in range(nb_images):
-		t = float(k)/nb_images
+		t = sqrt(float(k)/nb_images)
 		dictionnaire[k]	= dict()
 		dictionnaire[k]	= {}
 		dictionnaire[k]["centre"]	= pt_init + t*(pt_zoom - pt_init)
