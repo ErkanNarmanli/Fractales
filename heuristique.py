@@ -12,8 +12,8 @@ from libfractales import *
 import matplotlib.pyplot as plt
 import numpy as np
 
-nb_points = 20000
-n_max	  = 20000
+nb_points = 2000
+n_max	  = 2000
 
 pos_1 	= complex(-0.952, 0.504)
 pos_2	= complex(-0.952, -0.504)
@@ -40,7 +40,7 @@ x = np.linspace(0,dist,nb_points)
 y = np.zeros(nb_points)
 
 for k in range(nb_points):
-	t = float(k)/nb_points
+	t = h[k]
 	chargement(k,nb_points)
 	y[k] = my_fonction(t, n_max)
 print(" ")
