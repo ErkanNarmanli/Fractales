@@ -79,11 +79,15 @@ def launch_client(mandel_dict, taille = 600, nb_digits = None, save_dir = dossie
 
 	# On attend que tous les processus se terminent
 	print("Récolte des pépites...")
+	cpt = 0
 	for p in jobs:
 		p.join()
-
-		# print('Joined {}'.format(p))
 		
+		# print('Joined {}'.format(p))
+		chargement(cpt, nprocs)
+		cpt += 1
+
+	print(" ")	
 	t_exec = time.time() - t_init
 	print("Temps d'execution : {}".format(t_exec))
 
