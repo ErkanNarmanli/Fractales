@@ -15,15 +15,6 @@ import time
 import sys
 import os
 
-dossier_sav = 'Images/framboisine'
-
-taille 	   = 200
-nb_images  = 500
-nprocs	   = 50		#supprimer cet variable à terme
-verbose    = False
-
-nb_digits = len(str(nb_images)) - 1
-
 
 # Worker qui dessine et sauve les images
 def workers(mandel_dict, taille, nb_digits, save_dir, no = None):
@@ -47,7 +38,7 @@ def workers(mandel_dict, taille, nb_digits, save_dir, no = None):
 
 
 # Gestion des différents processus
-def launch_client(mandel_dict, taille = 600, nb_digits = None, save_dir = dossier_sav):
+def launch_client(mandel_dict, nb_images, nprocs, taille = 600, nb_digits = None, save_dir = "Images/framboisine", verbose = True):
 	"""
 	Lance les processus calculant les mandels indiqués par le dictionnaire
 	nb_digits est le nombre de chiffres à mettre dans le noms de fichiers.
@@ -57,8 +48,9 @@ def launch_client(mandel_dict, taille = 600, nb_digits = None, save_dir = dossie
 
 	t_init = time.time()
 	nb_ids = len(mandel_dict)
-	print('Quantité de processus à traiter : {}'.format(nb_ids))
-	print('Quantité de pétites entre lequels on les réparti : {}'.format(nprocs))
+	if verbose:
+		print('Quantité de processus à traiter : {}'.format(nb_ids))
+		print('Quantité de pétites entre lequels on les réparti : {}'.format(nprocs))
 	jobs = []
 	
 	# Si nb_digits est mal ou non specifié, on le déduit de nb_ids
@@ -66,7 +58,7 @@ def launch_client(mandel_dict, taille = 600, nb_digits = None, save_dir = dossie
 		nb_digits = len(str(nb_ids))
 	
 	#Distribution des tâches
-	print("Repartition des processus :")
+	if verbose: print("Repartition des processus :")
 	for k in xrange(nprocs):
 		min_index = min(mandel_dict.keys())
 		dict_size = len(mandel_dict)
@@ -74,24 +66,24 @@ def launch_client(mandel_dict, taille = 600, nb_digits = None, save_dir = dossie
 		p	  = Process(target = workers, args = (chunck, taille, nb_digits, save_dir, k))
 		jobs.append(p)
 		p.start()
-		chargement(len(jobs) - 1, nprocs)
-	print(" ")
+		if verbose: chargement(len(jobs) - 1, nprocs)
+	if verbose: print(" ")
 
 	# On attend que tous les processus se terminent
-	print("Récolte des pépites...")
-	cpt = 0
+	if verbose: print("Récolte des pépites...")
+	if verbose: cpt = 0
 	for p in jobs:
 		p.join()
 		
 		# print('Joined {}'.format(p))
-		chargement(cpt, nprocs)
-		cpt += 1
+		if verbose: chargement(cpt, nprocs)
+		if verbose: cpt += 1
 
-	print(" ")	
+	if verbose: print(" ")	
 	t_exec = time.time() - t_init
-	ecrire_temps(t_exec)
+	if verbose: ecrire_temps(t_exec)
 
-def creer_dico(pt_zoom = complex(0,0), pt_init = complex(-0.7,0), taille_min = 0.005):
+def creer_dico(nb_images, pt_zoom = complex(0,0), pt_init = complex(-0.7,0), taille_min = 0.005):
 	"""
 	Fonction qui génère les images pour la vidéo
 	En zoomant en changeant de centre de telle sorte que :
@@ -109,25 +101,35 @@ def creer_dico(pt_zoom = complex(0,0), pt_init = complex(-0.7,0), taille_min = 0
 	return dictionnaire
 
 
+def faire_film(taille = 100, pt_zoom = complex(-1.250666667,0.345333333), nb_images = 300, nprocs = None, verbose = True, nb_digits = None, dossier_sav = 'Images/framboisine'):
+	# ET HOP ! On commence à travailler !
+	t_init_gen = time.time()
 
-# ET HOP ! On commence à travailler !
-t_init_gen = time.time()
+	# On regarde si nb_digit est spécifié
+	if type(nb_digits) != int:
+		nb_digits = len(str(nb_images)) - 1
 
-# On vide le dossier, hein on est pas des cochons
-print("Suppression du contenu du dossier " + dossier_sav)
-os.system("cd " + dossier_sav + " ; rm *")
+	# On regarde si nprocs est spécifié
+	if type(nprocs) != int:
+		nprocs = nb_images
 
+	# On vide le dossier, hein on est pas des cochons	
+	if verbose: print("Suppression du contenu du dossier " + dossier_sav)
+	os.system("cd " + dossier_sav + " ; rm *")
+		
+	
+	# On calcule nos images :)
+	if verbose: print("Génération du dictionnaire des images")
+	dictionnaire = creer_dico(pt_zoom = pt_zoom, nb_images = nb_images)
+	
+	# On lance le client
+	if verbose: print("Calcul des images")
+	launch_client(mandel_dict = dictionnaire, taille = taille, nb_digits = nb_digits, save_dir = dossier_sav, nb_images = nb_images, nprocs = nprocs, verbose = verbose)
+	
+	# On lance la création du film
+	if verbose: print("Montage des images en film")
+	os.system("cd " + dossier_sav + " ; ffmpeg -v quiet -f image2 -r 10 -i img_%0{}d.png -vcodec mpeg4 -y movie.mp4".format(nb_digits))
+	t_exec = time.time() - t_init_gen
+	if verbose: ecrire_temps(t_exec)
 
-# On calcule nos images :)
-print("Génération du dictionnaire des images")
-dictionnaire = creer_dico(pt_zoom = complex(-1.250666667,0.345333333))
-
-# On lance le client
-print("Calcul des images")
-launch_client(mandel_dict = dictionnaire, taille = taille, nb_digits = nb_digits, save_dir = dossier_sav)
-
-# On lance la création du film
-print("Montage des images en film")
-os.system("cd " + dossier_sav + " ; ffmpeg -v quiet -f image2 -r 10 -i img_%0{}d.png -vcodec mpeg4 -y movie.mp4".format(nb_digits))
-t_exec = time.time() - t_init_gen
-ecrire_temps(t_exec)
+	return t_exec
