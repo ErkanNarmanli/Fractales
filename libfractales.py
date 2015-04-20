@@ -87,7 +87,7 @@ def coloration_zoli(n, n_max, col_a, col_b):
 	res = add_tpl(col_a, mult_tpl(t, h))
 	return res
 
-def ecrire(chaine, t_max):
+def ecrire(chaine, t_max = 0):
 	"""Fonction qui aligne du texte à droite dans un espace de t_max caractères"""
 	l = len(chaine)
 	for m in range(t_max - l):

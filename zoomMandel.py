@@ -17,8 +17,8 @@ import os
 
 dossier_sav = 'Images/framboisine'
 
-taille 	   = 100
-nb_images  = 200
+taille 	   = 800
+nb_images  = 1000
 nprocs	   = 4		#supprimer cet variable à terme
 verbose    = False
 
@@ -58,6 +58,7 @@ def launch_client(mandel_dict, nb_digits = None):
 	t_init = time.time()
 	nb_ids = len(mandel_dict)
 	print('Quantité de processus à traiter : {}'.format(nb_ids))
+	print('Quantité de pétites entre lequels on les réparti : {}'.format(nprocs))
 	jobs = []
 	
 	# Si nb_digits est mal ou non specifié, on le déduit de nb_ids
@@ -65,8 +66,7 @@ def launch_client(mandel_dict, nb_digits = None):
 		nb_digits = len(str(nb_ids))
 	
 	
-	if verbose:
-		print("Répartition des processus :")	
+	ecrire("Repartition des processus...")
 	for k in range(nprocs):
 		if verbose:
 			chargement(k, nprocs)
@@ -74,27 +74,20 @@ def launch_client(mandel_dict, nb_digits = None):
 		p	= Process(target = workers, args = (chunck, nb_digits, k))
 		jobs.append(p)
 		p.start()
+	print("     Done!")
 	
-	cpt = 0
-	if verbose:
-		print(" ")
-		print("Récolte des processus")
-		chargement(cpt, nprocs)
+	ecrire("Récolte des pépites...")
 	for p in jobs:
 		p.join()
 
-		if verbose:
-			chargement(cpt, nprocs)
-		cpt += 1
 		# print('Joined {}'.format(p))
-	
+	print("     Done!")
+		
 	t_exec = time.time() - t_init
-	if verbose:
-		print(" ")
-		print("Temps d'execution : {}".format(t_exec))
+	print("Temps d'execution : {}".format(t_exec))
 
 
-def images_zoom(pt_zoom = complex(0,0), pt_init = complex(-0.7,0), taille_min = 0.1):
+def images_zoom(pt_zoom = complex(0,0), pt_init = complex(-0.7,0), taille_min = 0.0005):
 	"""
 	Fonction qui génère les images pour la vidéo
 	En zoomant en changeant de centre de telle sorte que :
@@ -115,12 +108,18 @@ def images_zoom(pt_zoom = complex(0,0), pt_init = complex(-0.7,0), taille_min = 
 
 
 # ET HOP ! On commence à travailler !
+t_init_gen = time.time()
 # On vide le dossier, hein on est pas des cochons
+print("Suppression du contenu du dossier " + dossier_sav)
 os.system("cd " + dossier_sav + " ; rm *")
 
 
 # On calcule nos images :)
-images_zoom(pt_zoom = complex(-1.255,0.382))
+print("Calcul des images")
+images_zoom(pt_zoom = complex(-1.250666667,0.345333333))
 
 # On lance la création du film
-os.system("cd " + dossier_sav + " ; ffmpeg -f image2 -r 10 -i img_%0{}d.png -vcodec mpeg4 -y movie.mp4".format(nb_digits))
+print("Montage des images en film")
+os.system("cd " + dossier_sav + " ; ffmpeg -v quiet -f image2 -r 10 -i img_%0{}d.png -vcodec mpeg4 -y movie.mp4".format(nb_digits))
+t_exec = time.time() - t_init_gen
+print("Temps total d'execution : {}".format(t_exec))
