@@ -2,12 +2,74 @@
 # -*- coding:utf-8 -*-
 
 from Tkinter import *
+import tkMessageBox
 from PIL import Image, ImageTk
 from libmandel import cree_mandelbrot
 from libjulia import cree_julia
-from libfractales import ch_coord
+from libfractales import ch_coord, inv_ch_coord
 
 	
+##### Variables globales
+taille_image = 700
+mandel_largeur = 2.8			# Correspond aux options par défaut de cree_mandel
+mandel_centre = complex(-0.7, 0)	# idem, normalement on ne touche pas
+fichier_image = 'fond_film_maker_{}px.png'.format(taille_image)
+# Variable contenant la position du deernier clic de la souris
+# Important pour tracer le chemin à parcourir
+last_click = None
+last_click_id = None
+
+##### Fonctions utiles
+# Changements de coordonnées
+def get_coord(k, l):
+	""" Récupère les coordonnées dans le plan complexe d'un événement sur l'image """
+	c = ch_coord(k, l, taille_image, mandel_largeur, mandel_centre)
+	x = c.real
+	y = -c.imag	# tkinter oriente l'axe des ordonnées à l'envers
+	return(x, y)
+
+def inv_get_coord(x, y):
+	""" Fonction inverse : rend le pixel correspondant aux coordonnées (x, y) """
+	k, l = inv_ch_coord(complex(x, -y), taille_image, mandel_largeur, mandel_centre)
+	return(k, l)
+
+# Formatage d'un couple de point pour l'affichage dans SegItem
+def seg_format(pt1, pt2):
+	""" Formate le couple de points (pt1, pt2) qui représente une segment
+	pour l'affichage """
+	# 5 digits partout
+	string = ''
+	if pt1.real >= 0:
+		string += ' '
+	string += '{0:.4f}'.format(pt1.real)
+	if pt1.imag < 0:
+		string += ' -{0:.4f}i'.format(-pt1.imag)
+	else:
+		string += ' +{0:.4f}i'.format(pt1.imag)
+	string += '  ;  '
+	if pt2.real >= 0:
+		string += ' '
+	string += '{0:.4f}'.format(pt2.real)
+	if pt2.imag < 0:
+		string += ' -{0:.4f}i'.format(-pt2.imag)
+	else:
+		string += ' +{0:.4f}i'.format(pt2.imag)
+	return(string)
+
+##### Une exception
+class ImgFreqError(Exception):
+
+	""" Exception soulevée lorsqu'on essaie de sauvegarder avec un champ img_freq mal rempli """
+
+	def __init__(self, cause):
+		""" Initialisation """
+		Exception.__init__(self)
+		self.cause = cause
+
+	def __str__(self):
+		""" Fonction appelée lorsqu'on veut afficher l'exception """
+		return(self.cause)
+
 ##### Deux classes pour gérer la liste déroulant des segments 
 class SegItem(Frame):
 
@@ -31,6 +93,10 @@ class SegItem(Frame):
 		self.img_freq_label.grid(row = 1, column = 0)
 		self.img_freq_entry.grid(row = 1, column = 1)
 
+	def set_wcallback(self, f):
+		""" Définit la fonction à appliquer lorsque la variable img_freq est modifée """
+		self.img_freq.trace('w', lambda name, index, mode, var = self.img_freq: f())
+
 	def pack(self, cnf = {}, **kw):
 		""" On surcharge la méthode pack """
 		self.__displaycontent__()
@@ -53,7 +119,7 @@ class SegList(Frame):
 		Frame.__init__(self, parent, cnf, **kw)
 		self.segs_list = []
 		# Titre
-		self.title_label = Label(self, text = title, pady = 3)
+		self.title_label = Label(self, text = title, pady = 3, bd = 1, relief = GROOVE)
 		# Bouton supprimer
 		self.del_button = Button(self, text = 'Supprimer dernier')
 		## Configuration de la scrollbar
@@ -100,64 +166,36 @@ class SegList(Frame):
 	def add_item(self, seg_id, start_pt, end_pt, img_freq= 150):
 		""" Ajoute un segment à la liste """
 		new_seg = SegItem(self.innerframe, seg_id, start_pt, end_pt, img_freq, bd = 1, \
-				relief = GROOVE, bg = '#fafafa') 
+				relief = GROOVE, bg = '#fafafa')
+		new_seg.set_wcallback(update_nbimgs)
 		new_seg.pack(side = TOP, anchor = CENTER, padx = 5)
 		self.segs_list.append(new_seg)
 	
-	def total_images(self):
-		""" calcul le nombre total d'images de la seglist """
+	def total_images(self, err_msg = False):
+		""" calcul le nombre total d'images de la seglist.
+		Si err_msg vaut True, un message d'erreur sera envoyé si un champ contient une valeur
+		incorecte. Sinon, on ignore l'erreur et fixe la valeur à zéro
+		"""
 		total = 0
 		for seg in self.segs_list:
-			total += int(seg.img_freq.get()*abs(seg.start_pt - seg.end_pt))
+			try:
+				total += int(seg.img_freq.get()*abs(seg.start_pt - seg.end_pt))
+			except ValueError:
+				if err_msg:
+					raise ImgFreqError('Un des champs "Nb images/unité de longueur" est mal remplit')
+				else:
+					pass
 		return total
 	
-##### Fonctions utiles
-# Changement de coordonnées
-def get_coord(k, l):
-	""" Récupère les coordonnées dans le plan complexe d'un événement sur l'image """
-	c = ch_coord(k, l, taille_image, mandel_largeur, mandel_centre)
-	x = c.real
-	y = -c.imag	# tkinter oriente l'axe des ordonnées à l'envers
-	return(x, y)
-
-# Formatage d'un couple de point pour l'affichage dans SegItem
-def seg_format(pt1, pt2):
-	""" Formate le couple de points (pt1, pt2) qui représente une segment
-	pour l'affichage """
-	# 5 digits partout
-	string = ''
-	if pt1.real >= 0:
-		string += ' '
-	string += '{0:.4f}'.format(pt1.real)
-	if pt1.imag < 0:
-		string += ' -{0:.4f}i'.format(-pt1.imag)
-	else:
-		string += ' +{0:.4f}i'.format(pt1.imag)
-	string += '  ;  '
-	if pt2.real >= 0:
-		string += ' '
-	string += '{0:.4f}'.format(pt2.real)
-	if pt2.imag < 0:
-		string += ' -{0:.4f}i'.format(-pt2.imag)
-	else:
-		string += ' +{0:.4f}i'.format(pt2.imag)
-	return(string)
-
-##### Variables globales
-taille_image = 700
-mandel_largeur = 2.8			# Correspond aux options par défaut de cree_mandel
-mandel_centre = complex(-0.7, 0)	# idem, normalement on ne touche pas
-fichier_image = 'fond_film_maker_{}px.png'.format(taille_image)
-# Variable contenant la position du deernier clic de la souris
-# Important pour tracer le chemin à parcourir
-last_click = None
 
 ##### Fenêtre principale
 fenetre = Tk()
 fenetre.title('Julia Film Maker')
 
+
 ##### Image du mandelbrot
 mandel = Canvas(fenetre, width = taille_image, height = taille_image)
+# On charge l'image de fond (Mandelbrot)
 try:
 	image_fond = Image.open(fichier_image)
 except IOError:		# Si l'image n'existe pas, on la génère
@@ -166,6 +204,7 @@ except IOError:		# Si l'image n'existe pas, on la génère
 image_fond = ImageTk.PhotoImage(image_fond)
 mandel.create_image(taille_image/2, taille_image/2, image = image_fond)
 mandel.pack(side = LEFT, fill = Y)
+
 
 ##### Affichage des infos
 # Les différents widgets et variables
@@ -183,18 +222,21 @@ nbimgs_title_label = Label(info_frame, text = "Nombre d'images : ")
 nbimgs_title_label.grid(row = 2, column = 0, sticky = E)
 nbimgs_value_label = Label(info_frame, text = '')
 nbimgs_value_label.grid(row = 2, column = 1, sticky = W)
+
 # Fonction pour changer les valeurs des variables
 def update_position(event):
 	""" Affiche les coordonnées de l'événement dans les champs x et y """
 	x, y = get_coord(event.x, event.y)
 	x_value_label['text'] = '{0:.4f}'.format(x)	# 5 digits
 	y_value_label['text'] = '{0:.4f}'.format(y)	# idem
+
 # Au déplacement de la souris sur le Mandelbrot, on met à jours les coordonnées
 mandel.bind('<Motion>', update_position)
 
+
 ##### Liste des segments parcourus
 seglist = SegList(fenetre, title = 'Segments du chemin', border = 2, \
-		relief = GROOVE, height = taille_image - 300)
+		relief = GROOVE, height = taille_image - 200)
 seglist.pack(side = TOP, fill = X)
 
 # Mise à jour du nombre d'images
@@ -208,8 +250,7 @@ def add_segment(event):
 	""" Ajoute le segment reliant le dernier clic de la souris et le clic
 	présent qui cause l'appel de la fonction.
 	Au tout premier clic, on initialise juste la variable last_click """
-	global last_click
-	# Premier clic
+	global last_click, last_click_id
 	if last_click: 	# last_click est différent de None
 		# Ajout du segment sur le canvas
 		seg_id = mandel.create_line(last_click[0], last_click[1], event.x, event.y, fill = 'red')
@@ -221,6 +262,11 @@ def add_segment(event):
 		seglist.add_item(seg_id, start_pt, end_pt)
 		# Mise à jour du nombre total d'images
 		update_nbimgs()
+		# Mise à jour de la position du curseur last_click
+		mandel.coords(last_click_id, event.x - 3, event.y - 3, event.x + 3, event.y + 3)
+	else:
+		# Création du curseur last_click
+		last_click_id = mandel.create_rectangle(event.x - 3, event.y - 3, event.x + 3, event.y + 3, fill = 'red')
 	last_click = (event.x, event.y)
 
 # Au clic de la souris sur le Mandelbrot, on appelle add_segment
@@ -229,28 +275,50 @@ mandel.bind('<Button-1>', add_segment)
 # Fonction pour enlever un segment
 def del_last_segment():
 	""" Supprime le dernier segment de la liste du canvas contenant le Mandelbrot """
+	global last_click, last_click_id
 	if seglist.segs_list:	# La liste des segments n'est pas vide
 		segitem = seglist.segs_list.pop()
+		# Mise à jour du curseur last_click
+		last_click = inv_get_coord(segitem.start_pt.real, segitem.start_pt.imag)
+		lcx, lcy = last_click
+		mandel.coords(last_click_id, lcx - 3, lcy - 3, lcx + 3, lcy + 3)
+		# Destruction du SegItem
 		seg_id = segitem.seg_id
-		segitem.pack_forget()
-		del(segitem)
+		segitem.destroy()
 		mandel.delete(seg_id)
-		# recalcul du nombre d'images
+		# Recalcul du nombre d'images
 		update_nbimgs()
+	else:		# On a déjà supprimé tous les segments
+		# remise à zéro de last_click
+		last_click = None
+		mandel.delete(last_click_id)
+		last_click_id = None
 
 # On relie le bouton de suppression à del_last_segment
 seglist.del_button['command'] = del_last_segment
 
-##### Options d'enregistrement
-save_frame = Frame(fenetre, border = 2, relief = GROOVE)
-save_frame.pack(side = TOP, fill = X)
-name_label = Label(save_frame, text = 'Nom : ')
-name_label.grid(row = 0, column = 0, sticky = E)
-save_name = StringVar()
-name_entry = Entry(save_frame, textvariable = save_name)
-name_entry.grid(row = 0, column = 1, sticky = W)
-save_button = Button(save_frame, text = 'Sauvegarder')
-save_button.grid(row = 1, column = 1, sticky = W)
+
+##### La barre des menus
+menubar = Menu(fenetre)
+
+# Menu Fichier
+filemenu = Menu(menubar)
+filemenu.add_command(label = 'Ouvrir')
+filemenu.add_command(label = 'Enregistrer')
+filemenu.add_command(label = 'Quitter', command = fenetre.quit)
+menubar.add_cascade(label = 'Fichier', menu = filemenu)
+
+# Menu Aide
+helpmenu = Menu(menubar)
+helpmenu.add_command(label = "Mode d'emploi")
+helpmenu.add_command(label = "À propos")
+menubar.add_cascade(label = 'Aide', menu = helpmenu)
+
+# On attache le menu à la fenêtre principale
+fenetre['menu'] = menubar
+
 
 ##### Comme son nom l'indique, la mainloop
 fenetre.mainloop()
+
+
