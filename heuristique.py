@@ -15,8 +15,8 @@ import numpy as np
 nb_points = 2000
 n_max	  = 2000
 
-pos_1 	= complex(-0.952, 0.504)
-pos_2	= complex(-0.952, -0.504)
+pos_1 	= complex(-0.75, 0)
+pos_2	= complex(-0.75, 0.3)
 
 dist	= abs(pos_1 - pos_2)
 
