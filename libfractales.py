@@ -142,8 +142,8 @@ def inv_ch_coord(c, taille, largeur, centre):
 	""" Fonction inverse de la fonction ch_coord
 	Retourne des entiers """
 	x, y = c.real, c.imag
-	k = arrondi((x-centre)*taille/float(largeur) + taille/2. - 0.5)
-	l = arrondi(y*taille/float(largeur) + taille/2. - 0.5)
+	k = arrondi((x-centre.real)*taille/float(largeur) + taille/2. - 0.5)
+	l = arrondi((y-centre.imag)*taille/float(largeur) + taille/2. - 0.5)
 	return(k, l)
 
 def enregistre(image, nom, nom_dossier = 'Images'):
