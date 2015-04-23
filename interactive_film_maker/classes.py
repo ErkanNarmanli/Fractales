@@ -13,6 +13,9 @@ sys.path.append('../')
 from Tkinter import *
 from misc import *
 from PIL import Image, ImageTk
+import pickle
+
+
 
 ##### Une exception
 class ImgFreqError(Exception):
@@ -136,12 +139,16 @@ class SegItem(Frame):
 	def __init__(self, parent, seg_id, start_pt, end_pt, img_freq = 150, cnf = {}, **kw):
 		""" Initialisation de l'objet """
 		Frame.__init__(self, parent, cnf, **kw)
-		self.seg_id = seg_id		# Un id c'est pratique
+		# Un id c'est pratique
+		self.seg_id = seg_id
+		# Point de départ du segment
 		self.start_pt = start_pt
-		self.end_pt = end_pt		
+		# Point d'arrivée du segment
+		self.end_pt = end_pt	
+		# Nombre d'image par unité de longueur (Pour la génération du film)
 		self.img_freq = IntVar()	
 		self.img_freq.set(str(img_freq))
-		# Widgets affichant les coordonnées du segment et le nb d'images/unité de longueur
+		# Widgets affichant les infos ci dessus
 		self.pts_label = Label(self, text = seg_format(start_pt, end_pt), bg = kw['bg'])
 		self.img_freq_label = Label(self, text = 'Nb images/unité longueur :', bg = kw['bg'])
 		self.img_freq_entry = Entry(self, textvariable = self.img_freq, width = 5)
@@ -195,7 +202,7 @@ class SegList(Frame):
 	
 		def _configure_innerframe(event):
 			""" Mise à jour de la configuration de innerframe """
-			# Update scrollbar
+			# Update la scrollbar
 			size = (self.innerframe.winfo_reqwidth(), \
 					self.innerframe.winfo_reqheight())
 			self.canvas.config(scrollregion = "0 0 {} {}".format(size[0], size[1]))
@@ -225,7 +232,7 @@ class SegList(Frame):
 				relief = GROOVE, bg = '#fafafa')
 		new_seg.pack(side = TOP, anchor = CENTER, padx = 5)
 		self.segs_list.append(new_seg)
-		new_seg.set_wcallback(callback)
+		new_seg.set_wcallback(callback) # Fonction à appeler en cas de modification
 
 	# Supprime le dernier item
 	def del_last_item(self):
@@ -247,17 +254,28 @@ class SegList(Frame):
 		Si err_msg vaut True, un message d'erreur sera envoyé si un champ contient une valeur
 		incorecte. Sinon, on ignore l'erreur et fixe la valeur à zéro
 		"""
+		# On calcul sum( |start_pt - end_pt|*img_freq ) en parcourrant les segitems
 		total = 0
 		for seg in self.segs_list:
 			try:
 				total += int(seg.img_freq.get()*abs(seg.start_pt - seg.end_pt))
 			except ValueError:
 				if err_msg:
-					raise ImgFreqError('Un des champs "Nb images/unité de longueur" est mal remplit')
+					raise ImgFreqError('Un des champs "Nb images/unité de longueur" est mal rempli')
 				else:
 					pass
 		return total
 
+	# Sauvegarde de la SegList
+	def save_list(self, path):
+		""" Sauvegarde la liste des segments dans le fichier indiqué par path """
+		with open(path, 'wb') as save_file:
+			pickler = pickle.Pickler(save_file)
+			for seg in self.segs_list:
+				# Seules les données suivantes sont importantes
+				pickler.dump((	seg.start_pt, \
+						seg.end_pt,  \
+						seg.img_freq.get() ))
 
 
 

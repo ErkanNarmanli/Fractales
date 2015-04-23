@@ -53,3 +53,5 @@ def seg_format(pt1, pt2):
 	else:
 		string += ' +{0:.4f}i'.format(pt2.imag)
 	return(string)
+
+
