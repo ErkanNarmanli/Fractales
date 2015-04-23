@@ -1,39 +1,44 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
 
+import sys
+sys.path.append('../')
+
+
 import pickle
 import sys
 import os
 from filmserver import *
 
 
-try:
-	images_list = sys.argv[1]
-except IndexError:
-	print("Aucun fichier n'est spécifié")
-	exit(1)
-try:
-	save_dir = sys.argv[2]
-except IndexError:
-	save_dir = 'imgs'
+def ajoute_ligne(start_pt, end_pt, img_freq, img_dict, index):
+	""" Ajoute les images d'un segment au dictionnaire """
+	i_max = int(img_freq*abs(start_pt - end_pt))
+	for i in xrange(i_max):
+		index += 1
+		img_dict[index] = start_pt + i*(end_pt-start_pt)/float(i_max)
+	return  index
 
-images_dict = {}
-nb_images = 0
+def mp_make_film(file_path, save_dir = 'imgs'):
+	""" Lance un serveur manageant la génération de la liste d'image contenue
+	dans le fichier file_path. On génère ensuite un film à partir de ces images """
+	images_dict = {}
+	nb_images = 0
+	# Lecture du fichier contenant la liste des Julias à dessiner
+	try:
+		with open(file_path, 'rb') as fichier:
+			unpickler = pickle.Unpickler(fichier)
+			while True:
+				try:
+					start_pt, end_pt, img_freq = unpickler.load()
+					nb_images = ajoute_ligne(start_pt, end_pt, \
+							img_freq, images_dict, nb_images)
+				except EOFError:
+					break
+	except IOError: # Erreur à l'ouverture du fichier 
+		print("Le fichier spécifié n'existe pas")
+		exit(1)
 
-# Lecture du fichier contenant la liste des Julias à dessiner
-try:
-	with open(images_list, 'rb') as fichier:
-		unpickler = pickle.Unpickler(fichier)
-		while True:
-			try:
-				c = unpickler.load()
-				nb_images += 1
-				images_dict[nb_images] = c
-			except EOFError:
-				break
-except IOError: # Erreur à l'ouverture du fichier 
-	print("Le fichier spécifié n'existe pas")
-	exit(1)
-
-# Lancement du serveur
-runserver(images_dict, save_dir)
+	# Lancement du serveur
+	runserver(images_dict, save_dir)
+	print('Terminé')
