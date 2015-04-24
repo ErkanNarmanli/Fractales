@@ -13,6 +13,8 @@ sys.path.append('../')
 from Tkinter import *
 from misc import *
 from PIL import Image, ImageTk
+from libmandel import cree_mandelbrot
+from libjulia import cree_julia
 import pickle
 
 
@@ -87,6 +89,30 @@ class MandelCanvas(Canvas):
 			self.last_click_id = None
 		else:
 			pass
+
+##### Widget affichant une miniature d'ensemble de Julia
+class MiniJulia(Frame):
+
+	""" Classe affichant un ensemble de Julia """
+
+	def __init__(self, parent, cnf = {}, **kw):
+		""" Initialisation de l'objet """
+		Frame.__init__(self, parent, cnf, **kw)
+		# Canvas contenant l'image
+		self.canvas = Canvas(self, width = taille_miniature, height = taille_miniature)
+		self.image = None
+		# Affichage du canvas
+		self.canvas.pack()
+	
+	def set_new_julia(self, c):
+		# Remise à zéro du canvas
+		self.canvas.delete('all')
+		# Image de Julia
+		self.image = ImageTk.PhotoImage(cree_julia(taille = taille_miniature, c = c))
+		self.canvas.create_image(taille_miniature/2, taille_miniature/2, image = self.image)
+		# Légende
+		caption = 'c = ' + complex_format(c)
+		self.canvas.create_text(taille_miniature/2, 20, text = caption)
 
 
 ##### Widget affichant les infos utiles
@@ -182,8 +208,9 @@ class SegList(Frame):
 		self.segs_list = []
 		# Titre
 		self.title_label = Label(self, text = title, pady = 3, bd = 1, relief = GROOVE)
-		# Bouton supprimer
+		# Boutons de suppressions
 		self.del_button = Button(self, text = 'Supprimer dernier')
+		self.delall_button = Button(self, text = 'Supprimer tout')
 		## Configuration de la scrollbar
 		# On est obligés de passer par un canvas
 		self.scrollbar = Scrollbar(self, orient = VERTICAL)
@@ -220,6 +247,7 @@ class SegList(Frame):
 	def __displaycontent__(self):
 		""" Dispose correctement les widgets à l'intérieur de l'objet """
 		self.title_label.pack(side = TOP, fill = X, expand = FALSE)
+		self.delall_button.pack(side = BOTTOM, fill = X, expand = FALSE)
 		self.del_button.pack(side = BOTTOM, fill = X, expand = FALSE)
 		self.scrollbar.pack(side = RIGHT, fill = Y, expand = FALSE)
 		self.canvas.pack(side = LEFT, fill = BOTH, expand = TRUE)
