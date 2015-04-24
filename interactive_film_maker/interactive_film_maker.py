@@ -59,14 +59,19 @@ class InteractiveFilmMaker(Tk):
 		menubar = Menu(self)
 		# Menu 'Fichier'
 		filemenu = Menu(menubar)
-		filemenu.add_command(label = 'Ouvrir', command = self.load_seglist)
-		filemenu.add_command(label = 'Enregistrer', command = self.save_seglist)
-		filemenu.add_command(label = 'Quitter', command = self.quit)
+		filemenu.add_command(label = 'Ouvrir', command = self.load_seglist, \
+				accelerator = 'Ctrl+o')
+		filemenu.add_command(label = 'Enregistrer', command = self.save_seglist, \
+				accelerator = 'Ctrl+s')
+		filemenu.add_command(label = 'Quitter', command = self.quit, \
+				accelerator = 'Ctrl+q')
 		menubar.add_cascade(label = 'Fichier', menu = filemenu)
 		# Menu 'Édition'
 		editmenu = Menu(menubar)
-		editmenu.add_command(label = 'Supprimer dernier', command = self.del_last_segment)
-		editmenu.add_command(label = 'Supprimer tout', command = self.del_all_segments)
+		editmenu.add_command(label = 'Supprimer dernier', command = self.del_last_segment, \
+				accelerator = 'Ctrl+d')
+		editmenu.add_command(label = 'Supprimer tout', command = self.del_all_segments, \
+				accelerator = 'Ctrl+Shift+d')
 		menubar.add_cascade(label = 'Édition', menu = editmenu)
 		# Menu Aide
 		helpmenu = Menu(menubar)
@@ -79,6 +84,11 @@ class InteractiveFilmMaker(Tk):
 	# Gestion des événements
 	def __init_events__(self):
 		""" Définit le déclenchement des événements """
+		# Chargement/sauvegarde
+		self.bind_all('<Control-o>', lambda event: self.load_seglist())
+		self.bind_all('<Control-s>', lambda event: self.save_seglist())
+		# Quitter l'application
+		self.bind_all('<Control-q>', lambda event: self.quit())
 		# Affichage des coordonnées de la souris
 		self.mandel.bind('<Motion>', self.info_widget.update_position)
 		# Ajout d'un segment au clic de la souris
@@ -88,7 +98,9 @@ class InteractiveFilmMaker(Tk):
 				complex(*get_coord(event.x, event.y))))
 		# Boutons de suppression
 		self.seglist.del_button['command'] = self.del_last_segment
+		self.bind_all('<Control-d>', lambda event: self.del_last_segment())
 		self.seglist.delall_button['command'] = self.del_all_segments
+		self.bind_all('<Control-Shift-d>', lambda event: self.del_all_segments())
 		
 
 	# Ajout manuel d'un segment
