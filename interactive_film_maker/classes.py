@@ -41,6 +41,7 @@ class MandelCanvas(Canvas):
 	def __init__(self, parent, cnf = {}, **kw):
 		""" Initialisation de l'objet """
 		Canvas.__init__(self, parent, cnf, **kw)
+		self.emphasized_seg = None
 		# On charge l'image de fond (Mandelbrot)
 		try:
 			self.image_fond = Image.open(fichier_image)
@@ -82,6 +83,9 @@ class MandelCanvas(Canvas):
 			# Déplacement du curseur
 			self.last_click = (x, y)
 			self.coords(self.last_click_id, x - 3, y - 3, x + 3, y + 3)
+			# Si le segment était mis en valeur, on remet emphasized_seg à zéro
+			if seg_id == self.emphasized_seg:
+				self.emphasized_seg = None
 		elif self.last_click: 	# last_click existe encore
 			# Remise à zéro du curseur
 			self.last_click = None
@@ -89,6 +93,18 @@ class MandelCanvas(Canvas):
 			self.last_click_id = None
 		else:
 			pass
+
+	# Mise en valeur d'un segment
+	def emph_seg(self, seg_id):
+		""" Met en valeur le segment d'id seg_id """
+		if self.emphasized_seg:		# Un segment était déjà mis en valeur
+			# On désactive la mise en valeur de l'ancien segment
+			self.itemconfig(self.emphasized_seg, width = 1)
+		# On l'active pour le nouveau segment
+		self.itemconfig(seg_id, width = 3)
+		# On met la bonne valeur dans emphasized_seg
+		self.emphasized_seg = seg_id
+		
 
 ##### Widget affichant une miniature d'ensemble de Julia
 class MiniJulia(Frame):
@@ -100,9 +116,11 @@ class MiniJulia(Frame):
 		Frame.__init__(self, parent, cnf, **kw)
 		# Canvas contenant l'image
 		self.canvas = Canvas(self, width = taille_miniature, height = taille_miniature)
+		# Initialisation de l'image
 		self.image = None
+		self.set_new_julia(complex(0, 1))
 		# Affichage du canvas
-		self.canvas.pack()
+		self.canvas.pack(side = TOP)
 	
 	def set_new_julia(self, c):
 		# Remise à zéro du canvas
@@ -111,8 +129,10 @@ class MiniJulia(Frame):
 		self.image = ImageTk.PhotoImage(cree_julia(taille = taille_miniature, c = c))
 		self.canvas.create_image(taille_miniature/2, taille_miniature/2, image = self.image)
 		# Légende
+		title = 'Miniature'
+		self.canvas.create_text(taille_miniature/2, 10, text = title)
 		caption = 'c = ' + complex_format(c)
-		self.canvas.create_text(taille_miniature/2, 20, text = caption)
+		self.canvas.create_text(taille_miniature/2, taille_miniature - 10, text = caption)
 
 
 ##### Widget affichant les infos utiles
@@ -175,8 +195,8 @@ class SegItem(Frame):
 		self.img_freq = IntVar()	
 		self.img_freq.set(str(img_freq))
 		# Widgets affichant les infos ci dessus
-		self.pts_label = Label(self, text = seg_format(start_pt, end_pt), bg = kw['bg'])
-		self.img_freq_label = Label(self, text = 'Nb images/unité longueur :', bg = kw['bg'])
+		self.pts_label = Label(self, text = seg_format(start_pt, end_pt))
+		self.img_freq_label = Label(self, text = 'Nb images/unité longueur :')
 		self.img_freq_entry = Entry(self, textvariable = self.img_freq, width = 5)
 		# Disposition des widgets
 		self.__displaycontent__()
@@ -187,6 +207,13 @@ class SegItem(Frame):
 		self.pts_label.grid(row = 0, column = 0, columnspan = 2)
 		self.img_freq_label.grid(row = 1, column = 0)
 		self.img_freq_entry.grid(row = 1, column = 1)
+		self.set_bg(DEFAULT_SEG_COLOR)
+	
+	def set_bg(self, bgcolor):
+		""" Définit la couleur de fond """
+		self['bg'] = bgcolor
+		self.pts_label['bg'] = bgcolor
+		self.img_freq_label['bg'] = bgcolor
 
 	# Relie la modification du champ img_freq à l'appel de f
 	def set_wcallback(self, f):
@@ -206,6 +233,10 @@ class SegList(Frame):
 		""" Initialisation de l'objet """
 		Frame.__init__(self, parent, cnf, **kw)
 		self.segs_list = []
+		self.emphasized_item = None
+		# Correspondances id/index pour des questions de performances
+		# dict[id] = index
+		self.id_index = {}
 		# Titre
 		self.title_label = Label(self, text = title, pady = 3, bd = 1, relief = GROOVE)
 		# Boutons de suppressions
@@ -251,15 +282,20 @@ class SegList(Frame):
 		self.del_button.pack(side = BOTTOM, fill = X, expand = FALSE)
 		self.scrollbar.pack(side = RIGHT, fill = Y, expand = FALSE)
 		self.canvas.pack(side = LEFT, fill = BOTH, expand = TRUE)
+	
+	def seg_by_id(self, seg_id):
+		""" Renvoit un pointeur vers le segitem d'id seg_id """
+		return (self.segs_list[self.id_index[seg_id]])
 
 	# Fait toutes les initialisations nécessaires à l'ajout d'un item
 	def add_item(self, seg_id, start_pt, end_pt, callback):
 		""" Ajoute un segment à la liste """
 		# Nouvel item
 		new_seg = SegItem(self.innerframe, seg_id, start_pt, end_pt, 150, bd = 1, \
-				relief = GROOVE, bg = '#fafafa')
+				relief = GROOVE)
 		new_seg.pack(side = TOP, anchor = CENTER, padx = 5)
 		self.segs_list.append(new_seg)
+		self.id_index[new_seg.seg_id] = len(self.segs_list) - 1
 		new_seg.set_wcallback(callback) # Fonction à appeler en cas de modification
 
 	# Supprime le dernier item
@@ -270,12 +306,27 @@ class SegList(Frame):
 			segitem = self.segs_list.pop()
 			x, y = inv_get_coord(segitem.start_pt.real, segitem.start_pt.imag)
 			seg_id = segitem.seg_id
+			# Si l'item supprimé était mis en valeur, on remet emphasized_item à zéro
+			if seg_id == self.emphasized_item:
+				self.emphasized_item = None
 			# Destruction du segitem
+			del(self.id_index[segitem.seg_id])
 			segitem.destroy()
 			return(seg_id, x, y)	
 		else:
 			return(None, None, None)
 
+	# Met en valeur un item
+	def emph_item(self, seg_id):
+		""" Met en valeur l'item d'id seg_id """
+		if self.emphasized_item:	# Un item était déjà mis en valeur
+			# On désactive la mise en valeur de l'ancien item
+			self.seg_by_id(self.emphasized_item).set_bg(DEFAULT_SEG_COLOR)
+		# On l'active pour le nouvel item
+		self.seg_by_id(seg_id).set_bg(EMPH_SEG_COLOR)
+		# On met la bonne valeur dans emphasized_item
+		self.emphasized_item = seg_id
+	
 	# Calcule le nombre total d'images du film
 	def total_images(self, err_msg = False):
 		""" Calcul le nombre total d'images de la seglist.

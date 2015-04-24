@@ -114,6 +114,11 @@ class InteractiveFilmMaker(Tk):
 			start_pt = complex(*get_coord(x0, y0))
 			f = lambda: self.info_widget.update_nbimgs(self.seglist.total_images())
 			self.seglist.add_item(seg_id, start_pt, end_pt, f)
+			# On active la mise en valeur au clic du segment
+			segitem = self.seglist.seg_by_id(seg_id)
+			segitem.bind('<Button-1>', lambda event: self.emph_seg(seg_id))
+			for child in segitem.children.values():
+				child.bind('<Button-1>', lambda event: self.emph_seg(seg_id))
 			# Mise à jour du nombre d'images
 			f()
 
@@ -138,7 +143,14 @@ class InteractiveFilmMaker(Tk):
 		nbseg = len(self.seglist.segs_list) 
 		for i in xrange(nbseg + 1):
 			self.del_last_segment()
-
+	
+	# Met en valeur un segment
+	def emph_seg(self, seg_id):
+		""" Met en valeur le segment d'id seg_id dans le canvas et dans 
+		la seglist """
+		self.seglist.emph_item(seg_id)
+		self.mandel.emph_seg(seg_id)
+	
 	# Enregistrement de la seglist
 	def save_seglist(self):
 		""" enregistre la seglist """

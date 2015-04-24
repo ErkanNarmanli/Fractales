@@ -17,6 +17,8 @@ taille_miniature = 180			# Taille des ensembles de Julia
 mandel_largeur = 2.8			# Correspond aux options par défaut de cree_mandel
 mandel_centre = complex(-0.7, 0)	# idem, normalement on ne touche pas
 fichier_image = 'fond_film_maker_{}px.png'.format(taille_image)
+DEFAULT_SEG_COLOR = '#f0f0f0'
+EMPH_SEG_COLOR = '#ffd0d0'
 
 ##### Fonctions utiles
 # Changements de coordonnées
