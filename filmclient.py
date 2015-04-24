@@ -12,14 +12,13 @@ from mp_film import *
 IP = 'sas.eleves.ens.fr' 
 PORT = 12345
 AUTHKEY = 'akey'
-taille = 100
 
 # Calcul des Julias
 def mp_julia(job_queue, result_queue):
 	""" Calcule de ensembles de Julia et enregistre les images """
 	while True:
 		try:
-			julia_dict, save_dir = job_queue.get_nowait()
+			julia_dict, save_dir, taille = job_queue.get_nowait()
 			launch_client(julia_dict, taille, nb_digits = 6, save_dir = save_dir)
 			keys = julia_dict.keys()
 			result_queue.put((min(keys), max(keys)))
@@ -42,9 +41,9 @@ def make_client_manager(ip, port, authkey):
 	return(manager)
 
 # Mise en route du client
-def runclient():
+def runclient(ip = IP, port = PORT, authkey = AUTHKEY):
 	""" Crée un client et le connecte au serveur distant pour recevoir les tâches à exécuter """
-	manager = make_client_manager(IP, PORT, AUTHKEY)
+	manager = make_client_manager(ip, port, authkey)
 	job_queue = manager.get_job_queue()
 	result_queue = manager.get_result_queue()
 	mp_julia(job_queue, result_queue)

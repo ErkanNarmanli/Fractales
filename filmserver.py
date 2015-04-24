@@ -33,7 +33,7 @@ def make_server_manager(port , authkey):
 	return(manager)
 
 # Lancement du serveur
-def runserver(julia_dict, save_dir):
+def runserver(julia_dict, save_dir, taille):
 	""" Lance le serveur qui va distribuer le calcul sur plusieurs machines """
 
 	# On lance le manager qui va superviser les opérations
@@ -45,7 +45,7 @@ def runserver(julia_dict, save_dir):
 	chunk_size = 50
 	for i in xrange(0, len(julia_dict), chunk_size):
 		little_dict = {k: c for k, c in julia_dict.items() if i <= k < i + chunk_size} 
-		job_queue.put((little_dict, save_dir))
+		job_queue.put((little_dict, save_dir, taille))
 	
 	# On attend les clients
 	print('Attente des réponses des clients ... ')
@@ -53,8 +53,8 @@ def runserver(julia_dict, save_dir):
 		print('Terminé : ' + str(result_queue.get()))
 	
 	# On monte le film
-	print('\nGénération du film\n')
-	os.system("cd " + save_dir + " ; ffmpeg -f image2 -r 10 -i img_%06d.png -vcodec mpeg4 -y movie.mp4")
+	#print('\nGénération du film\n')
+	#os.system("cd " + save_dir + " ; ffmpeg -f image2 -r 10 -i img_%06d.png -vcodec mpeg4 -y movie.mp4")
 
 	# On laisse un peu de temps aux clients pour réaliser que leur travail est terminé
 	sleep(2)

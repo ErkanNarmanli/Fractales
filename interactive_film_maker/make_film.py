@@ -19,7 +19,7 @@ def ajoute_ligne(start_pt, end_pt, img_freq, img_dict, index):
 		img_dict[index] = start_pt + i*(end_pt-start_pt)/float(i_max)
 	return  index
 
-def mp_make_film(file_path, save_dir = 'imgs'):
+def mp_make_film(file_path, save_dir = 'imgs', taille = 600):
 	""" Lance un serveur manageant la génération de la liste d'image contenue
 	dans le fichier file_path. On génère ensuite un film à partir de ces images """
 	images_dict = {}
@@ -40,5 +40,5 @@ def mp_make_film(file_path, save_dir = 'imgs'):
 		exit(1)
 
 	# Lancement du serveur
-	runserver(images_dict, save_dir)
+	runserver(images_dict, save_dir, taille)
 	print('Terminé')
