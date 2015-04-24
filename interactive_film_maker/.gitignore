@@ -1,0 +1,14 @@
+# Le gitignore
+.gitignore
+
+# Les images
+*.png
+
+# Le python précompilé
+*.pyc
+
+# Les Listes de segments
+*.seglist
+
+# La todolist
+todointer
