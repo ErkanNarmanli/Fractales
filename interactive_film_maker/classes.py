@@ -46,7 +46,7 @@ class MandelCanvas(Canvas):
 		try:
 			self.image_fond = Image.open(fichier_image)
 		except IOError:		# Si l'image n'existe pas, on la génère
-			self.image_fond = cree_mandelbrot(taille = taille_image)
+			self.image_fond = cree_mandelbrot(taille = taille_image, verbose = verbose)
 			self.image_fond.save(fichier_image)
 		self.image_fond = ImageTk.PhotoImage(self.image_fond)
 		self.create_image(taille_image/2, taille_image/2, image = self.image_fond)
@@ -97,13 +97,18 @@ class MandelCanvas(Canvas):
 	# Mise en valeur d'un segment
 	def emph_seg(self, seg_id):
 		""" Met en valeur le segment d'id seg_id """
-		if self.emphasized_seg:		# Un segment était déjà mis en valeur
-			# On désactive la mise en valeur de l'ancien segment
+		if self.emphasized_seg == seg_id: # On clique sur le même segment
+			# On désactive la mise en valeur
 			self.itemconfig(self.emphasized_seg, width = 1)
-		# On l'active pour le nouveau segment
-		self.itemconfig(seg_id, width = 3)
-		# On met la bonne valeur dans emphasized_seg
-		self.emphasized_seg = seg_id
+			self.emphasized_seg = None
+		else:
+			if self.emphasized_seg:	# Un autre segment était déjà mis en valeur
+				# On désactive la mise en valeur de l'ancien segment
+				self.itemconfig(self.emphasized_seg, width = 1)
+			# On l'active pour le nouveau segment
+			self.itemconfig(seg_id, width = 3)
+			# On met la bonne valeur dans emphasized_seg
+			self.emphasized_seg = seg_id
 		
 
 ##### Widget affichant une miniature d'ensemble de Julia
@@ -126,7 +131,7 @@ class MiniJulia(Frame):
 		# Remise à zéro du canvas
 		self.canvas.delete('all')
 		# Image de Julia
-		self.image = ImageTk.PhotoImage(cree_julia(taille = taille_miniature, c = c))
+		self.image = ImageTk.PhotoImage(cree_julia(taille = taille_miniature, c = c, verbose = verbose))
 		self.canvas.create_image(taille_miniature/2, taille_miniature/2, image = self.image)
 		# Légende
 		title = 'Miniature'
@@ -319,13 +324,18 @@ class SegList(Frame):
 	# Met en valeur un item
 	def emph_item(self, seg_id):
 		""" Met en valeur l'item d'id seg_id """
-		if self.emphasized_item:	# Un item était déjà mis en valeur
-			# On désactive la mise en valeur de l'ancien item
-			self.seg_by_id(self.emphasized_item).set_bg(DEFAULT_SEG_COLOR)
-		# On l'active pour le nouvel item
-		self.seg_by_id(seg_id).set_bg(EMPH_SEG_COLOR)
-		# On met la bonne valeur dans emphasized_item
-		self.emphasized_item = seg_id
+		if self.emphasized_item == seg_id:	# L'item était déjà en relief
+			# On désactive la mise en valeur
+			self.seg_by_id(seg_id).set_bg(DEFAULT_SEG_COLOR)
+			self.emphasized_item = None
+		else:
+			if self.emphasized_item:	# Un autre item était déjà mis en valeur
+				# On désactive la mise en valeur de l'ancien item
+				self.seg_by_id(self.emphasized_item).set_bg(DEFAULT_SEG_COLOR)
+			# On l'active pour le nouvel item
+			self.seg_by_id(seg_id).set_bg(EMPH_SEG_COLOR)
+			# On met la bonne valeur dans emphasized_item
+			self.emphasized_item = seg_id
 	
 	# Calcule le nombre total d'images du film
 	def total_images(self, err_msg = False):

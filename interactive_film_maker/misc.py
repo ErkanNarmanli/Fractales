@@ -12,12 +12,22 @@ sys.path.append('../')
 from libfractales import ch_coord, inv_ch_coord
 
 ##### Variables globales
-taille_image = 750			# Taille du mandelbrot
-taille_miniature = 180			# Taille des ensembles de Julia
-mandel_largeur = 2.8			# Correspond aux options par défaut de cree_mandel
-mandel_centre = complex(-0.7, 0)	# idem, normalement on ne touche pas
+# Taille du mandelbrot
+taille_image = 750
+# Taille des ensembles de Julia
+taille_miniature = 180
+# Mettre cette contante à False pour masquer les barres de chargement lors de
+# la génération des images
+verbose = True
+# Constantes utilisées pour la génération des images
+# Ne pas toucher
+mandel_largeur = 2.8
+mandel_centre = complex(-0.7, 0)	
+# Fichier contenant l'image du Mandelbrot
 fichier_image = 'fond_film_maker_{}px.png'.format(taille_image)
+# Couleur des frames contenant les infos sur les segments
 DEFAULT_SEG_COLOR = '#f0f0f0'
+# Couleur desdits frames lorsqu'ils sont séléctionnés
 EMPH_SEG_COLOR = '#ffd0d0'
 
 ##### Fonctions utiles

@@ -12,8 +12,6 @@ sys.path.append('../')
 
 from misc import *
 from classes import *
-from libmandel import cree_mandelbrot
-from libjulia import cree_julia
 import tkFileDialog
 import tkMessageBox
 
