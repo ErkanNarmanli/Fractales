@@ -12,6 +12,7 @@ sys.path.append('../')
 
 from Tkinter import *
 from misc import *
+from filmserver import runserver
 from PIL import Image, ImageTk
 from libmandel import cree_mandelbrot
 from libjulia import cree_julia
@@ -187,7 +188,7 @@ class SegItem(Frame):
 
 	""" Un item d'une SegList """
 
-	def __init__(self, parent, seg_id, start_pt, end_pt, img_freq = 150, cnf = {}, **kw):
+	def __init__(self, parent, seg_id, start_pt, end_pt, img_freq = 100, cnf = {}, **kw):
 		""" Initialisation de l'objet """
 		Frame.__init__(self, parent, cnf, **kw)
 		# Un id c'est pratique
@@ -296,7 +297,7 @@ class SegList(Frame):
 	def add_item(self, seg_id, start_pt, end_pt, callback):
 		""" Ajoute un segment à la liste """
 		# Nouvel item
-		new_seg = SegItem(self.innerframe, seg_id, start_pt, end_pt, 150, bd = 1, \
+		new_seg = SegItem(self.innerframe, seg_id, start_pt, end_pt, 100, bd = 1, \
 				relief = GROOVE)
 		new_seg.pack(side = TOP, anchor = CENTER, padx = 5)
 		self.segs_list.append(new_seg)
@@ -365,9 +366,22 @@ class SegList(Frame):
 				pickler.dump((	seg.start_pt, \
 						seg.end_pt,  \
 						seg.img_freq.get() ))
-
-
-
-
+	
+	# Génère le film
+	def make_film(self):
+		""" Génère le film associé à la seglist """
+		julia_dict = {}
+		index = 0
+		# Remplissage du dictionnaire
+		for seg in self.segs_list:
+			try:
+				i_max = int(seg.img_freq.get()*abs(seg.start_pt - seg.end_pt))
+				for i in xrange(i_max):
+					index += 1
+					julia_dict[index] = seg.start_pt + i*(seg.end_pt - seg.start_pt)/float(i_max)
+			except ValueError:
+				pass
+		runserver(julia_dict, 'imgs', 800)
+				
 
 

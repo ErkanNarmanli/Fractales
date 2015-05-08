@@ -70,6 +70,8 @@ class InteractiveFilmMaker(Tk):
 				accelerator = 'Ctrl+d')
 		editmenu.add_command(label = 'Supprimer tout', command = self.del_all_segments, \
 				accelerator = 'Ctrl+Shift+d')
+		editmenu.add_command(label = 'Générer le film', command = self.seglist.make_film, \
+				accelerator = 'Ctrl+g')
 		menubar.add_cascade(label = 'Édition', menu = editmenu)
 		# Menu Aide
 		helpmenu = Menu(menubar)
@@ -89,16 +91,17 @@ class InteractiveFilmMaker(Tk):
 		self.bind_all('<Control-q>', lambda event: self.quit())
 		# Affichage des coordonnées de la souris
 		self.mandel.bind('<Motion>', self.info_widget.update_position)
-		# Ajout d'un segment au clic de la souris
-		self.mandel.bind('<Button-1>', self.add_segment)
-		# Affichage d'un ensemble de Julia au clic-droit
-		self.mandel.bind('<Button-2>', lambda event: self.minijulia.set_new_julia( \
+		# Ajout d'un segment au clic-droit
+		self.mandel.bind('<Button-2>', self.add_segment)
+		# Affichage d'un ensemble de Julia au clic de la souris
+		self.mandel.bind('<Button-1>', lambda event: self.minijulia.set_new_julia( \
 				complex(*get_coord(event.x, event.y))))
 		# Boutons de suppression
 		self.seglist.del_button['command'] = self.del_last_segment
 		self.bind_all('<Control-d>', lambda event: self.del_last_segment())
 		self.seglist.delall_button['command'] = self.del_all_segments
 		self.bind_all('<Control-Shift-d>', lambda event: self.del_all_segments())
+		self.bind_all('<Control-Shift-g>', lambda event: self.make_film)
 		
 
 	# Ajout manuel d'un segment

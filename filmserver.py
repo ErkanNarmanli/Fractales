@@ -11,6 +11,8 @@ from Queue import Queue, Empty
 from time import sleep
 import os
 
+from PIL import Image
+
 PORT = 12345
 AUTHKEY = 'akey'
 
@@ -45,12 +47,13 @@ def runserver(julia_dict, save_dir, taille):
 	chunk_size = 50
 	for i in xrange(0, len(julia_dict), chunk_size):
 		little_dict = {k: c for k, c in julia_dict.items() if i <= k < i + chunk_size} 
-		job_queue.put((little_dict, save_dir, taille))
+		job_queue.put((little_dict, taille))
 	
 	# On attend les clients
 	print('Attente des réponses des clients ... ')
-	for i in xrange(0, len(julia_dict), chunk_size):
-		print('Terminé : ' + str(result_queue.get()))
+	for i in xrange(len(julia_dict)):
+		image, number = result_queue.get()
+		image.save(save_dir + '/img_' + str(number).zfill(6) + '.png')
 	
 	# On monte le film
 	#print('\nGénération du film\n')

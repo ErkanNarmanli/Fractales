@@ -18,10 +18,8 @@ def mp_julia(job_queue, result_queue):
 	""" Calcule de ensembles de Julia et enregistre les images """
 	while True:
 		try:
-			julia_dict, save_dir, taille = job_queue.get_nowait()
-			launch_client(julia_dict, taille, nb_digits = 6, save_dir = save_dir)
-			keys = julia_dict.keys()
-			result_queue.put((min(keys), max(keys)))
+			julia_dict, taille = job_queue.get_nowait()
+			launch_client(julia_dict, result_queue, taille)
 		except Empty:
 			return
 

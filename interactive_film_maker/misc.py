@@ -18,7 +18,7 @@ taille_image = 750
 taille_miniature = 180
 # Mettre cette contante à False pour masquer les barres de chargement lors de
 # la génération des images
-verbose = True
+verbose = False
 # Constantes utilisées pour la génération des images
 # Ne pas toucher
 mandel_largeur = 2.8

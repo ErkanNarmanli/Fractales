@@ -19,9 +19,8 @@ def ajoute_ligne(start_pt, end_pt, img_freq, img_dict, index):
 		img_dict[index] = start_pt + i*(end_pt-start_pt)/float(i_max)
 	return  index
 
-def mp_make_film(file_path, save_dir = 'imgs', taille = 600):
-	""" Lance un serveur manageant la génération de la liste d'image contenue
-	dans le fichier file_path. On génère ensuite un film à partir de ces images """
+def lire_fichier(file_path):
+	""" Lit un fichier .seglist pour générer un film """
 	images_dict = {}
 	nb_images = 0
 	# Lecture du fichier contenant la liste des Julias à dessiner
@@ -34,11 +33,17 @@ def mp_make_film(file_path, save_dir = 'imgs', taille = 600):
 					nb_images = ajoute_ligne(start_pt, end_pt, \
 							img_freq, images_dict, nb_images)
 				except EOFError:
-					break
+					return (images_dict, nb_images)
 	except IOError: # Erreur à l'ouverture du fichier 
 		print("Le fichier spécifié n'existe pas")
 		exit(1)
 
+
+def mp_make_film(file_path, save_dir = 'imgs', taille = 600):
+	""" Lance un serveur manageant la génération de la liste d'image contenue
+	dans le fichier file_path. On génère ensuite un film à partir de ces images """
+	# Lecture du fichier
+	images_dict, nb_images = lire_fichier(file_path)
 	# Lancement du serveur
 	runserver(images_dict, save_dir, taille)
 	print('Terminé')
