@@ -44,7 +44,7 @@ def runserver(julia_dict, save_dir, taille):
 	result_queue = manager.get_result_queue()
 
 	# Séparation du dictionnaire en chuncks de petites tailles et envoi aux clients
-	chunk_size = 50
+	chunk_size = 30
 	for i in xrange(0, len(julia_dict), chunk_size):
 		little_dict = {k: c for k, c in julia_dict.items() if i <= k < i + chunk_size} 
 		job_queue.put((little_dict, taille))
@@ -56,8 +56,8 @@ def runserver(julia_dict, save_dir, taille):
 		image.save(save_dir + '/img_' + str(number).zfill(6) + '.png')
 	
 	# On monte le film
-	#print('\nGénération du film\n')
-	#os.system("cd " + save_dir + " ; ffmpeg -f image2 -r 10 -i img_%06d.png -vcodec mpeg4 -y movie.mp4")
+	print('\nGénération du film\n')
+	os.system("cd " + save_dir + " ; ffmpeg -framerate 10 -i img_%06d.png -c:v libx264 -r 30 -pix_fmt yuv420p movie.mp4")
 
 	# On laisse un peu de temps aux clients pour réaliser que leur travail est terminé
 	sleep(2)
