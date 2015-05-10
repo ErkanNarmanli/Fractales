@@ -92,7 +92,7 @@ class InteractiveFilmMaker(Tk):
 		# Affichage des coordonnées de la souris
 		self.mandel.bind('<Motion>', self.info_widget.update_position)
 		# Ajout d'un segment au clic-droit
-		self.mandel.bind('<Button-2>', self.add_segment)
+		self.mandel.bind('<Button-3>', self.add_segment)
 		# Affichage d'un ensemble de Julia au clic de la souris
 		self.mandel.bind('<Button-1>', lambda event: self.minijulia.set_new_julia( \
 				complex(*get_coord(event.x, event.y))))
