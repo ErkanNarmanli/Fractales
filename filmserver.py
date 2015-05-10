@@ -6,6 +6,7 @@ Serveur utilisant multiprocessing pour distribuer le calcul d'un grand
 nombre d'ensembles de Julia sur différentes machines
 """
 
+from PIL import Image
 from multiprocessing.managers import SyncManager
 from Queue import Queue, Empty
 from time import sleep
@@ -44,7 +45,7 @@ def runserver(julia_dict, save_dir, taille):
 	result_queue = manager.get_result_queue()
 
 	# Séparation du dictionnaire en chuncks de petites tailles et envoi aux clients
-	chunk_size = 30
+	chunk_size = 10
 	for i in xrange(0, len(julia_dict), chunk_size):
 		little_dict = {k: c for k, c in julia_dict.items() if i <= k < i + chunk_size} 
 		job_queue.put((little_dict, taille))
@@ -52,7 +53,9 @@ def runserver(julia_dict, save_dir, taille):
 	# On attend les clients
 	print('Attente des réponses des clients ... ')
 	for i in xrange(len(julia_dict)):
-		image, number = result_queue.get()
+		image_data, number = result_queue.get()
+		image = Image.new('RGB', (taille, taille))
+		image.putdata(image_data)
 		image.save(save_dir + '/img_' + str(number).zfill(6) + '.png')
 	
 	# On monte le film

@@ -19,7 +19,7 @@ with open('liste', 'ab') as fichier:
 	for i in range(314):
 		pickler.dump(0.25 + rect((0.5*(1 - cos(pi*i/314)) + 0.05).real, pi*i/314))
 	
-	ajoute_ligne(complex(-0.30, 0), complex(-2, 0), 125, pickler)
+	ajoute_ligne(complex(-0.80, 0), complex(-2, 0), 125, pickler)
 	ajoute_ligne(complex(-2, 0), complex(-1.3, 0.06), 100, pickler)
 	ajoute_ligne(complex(-1.3, 0.06), complex(-1.25, 0.028), 125, pickler)
 	ajoute_ligne(complex(-1.25, 0.028), complex(-1.22, 0.16), 125, pickler)

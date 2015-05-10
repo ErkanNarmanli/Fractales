@@ -20,7 +20,7 @@ def worker(index, c, result_queue, taille):
 	Dessine une liste d'ensembles de Julia et les place dans result_queue.
 	"""
 	image = cree_julia(taille = taille, c = c, verbose = False)
-	result_queue.put((image, index))
+	result_queue.put((list(image.getdata()), index))
 
 
 # Gestion des différents processus

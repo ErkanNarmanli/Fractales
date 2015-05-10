@@ -105,7 +105,7 @@ class InteractiveFilmMaker(Tk):
 		
 
 	# Ajout manuel d'un segment
-	def __add_segment_man__(self, x, y):
+	def __add_segment_man__(self, x, y, img_freq = 150):
 		""" Ajout un segment sur le canvas et dans la seglist """
 		# Ajout d'un segment au canvas
 		seg_id, x0, y0 = self.mandel.add_segment(x, y)
@@ -114,7 +114,7 @@ class InteractiveFilmMaker(Tk):
 			end_pt = complex(*get_coord(x, y))
 			start_pt = complex(*get_coord(x0, y0))
 			f = lambda: self.info_widget.update_nbimgs(self.seglist.total_images())
-			self.seglist.add_item(seg_id, start_pt, end_pt, f)
+			self.seglist.add_item(seg_id, start_pt, end_pt, f, img_freq)
 			# On active la mise en valeur au clic du segment
 			segitem = self.seglist.seg_by_id(seg_id)
 			segitem.bind('<Button-1>', lambda event: self.emph_seg(seg_id))
@@ -186,10 +186,10 @@ class InteractiveFilmMaker(Tk):
 						start_pt, end_pt, img_freq = unpickler.load()
 						if fst_seg:
 							x0, y0 = inv_get_coord(start_pt.real, start_pt.imag)
-							self.__add_segment_man__(x0, y0)
+							self.__add_segment_man__(x0, y0, img_freq)
 							fst_seg = False
 						x, y = inv_get_coord(end_pt.real, end_pt.imag)
-						self.__add_segment_man__(x, y)
+						self.__add_segment_man__(x, y, img_freq)
 					except EOFError:
 						break
 

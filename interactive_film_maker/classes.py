@@ -188,7 +188,7 @@ class SegItem(Frame):
 
 	""" Un item d'une SegList """
 
-	def __init__(self, parent, seg_id, start_pt, end_pt, img_freq = 100, cnf = {}, **kw):
+	def __init__(self, parent, seg_id, start_pt, end_pt, img_freq = 150, cnf = {}, **kw):
 		""" Initialisation de l'objet """
 		Frame.__init__(self, parent, cnf, **kw)
 		# Un id c'est pratique
@@ -294,10 +294,10 @@ class SegList(Frame):
 		return (self.segs_list[self.id_index[seg_id]])
 
 	# Fait toutes les initialisations nécessaires à l'ajout d'un item
-	def add_item(self, seg_id, start_pt, end_pt, callback):
+	def add_item(self, seg_id, start_pt, end_pt, callback, img_freq = 150):
 		""" Ajoute un segment à la liste """
 		# Nouvel item
-		new_seg = SegItem(self.innerframe, seg_id, start_pt, end_pt, 100, bd = 1, \
+		new_seg = SegItem(self.innerframe, seg_id, start_pt, end_pt, img_freq, bd = 1, \
 				relief = GROOVE)
 		new_seg.pack(side = TOP, anchor = CENTER, padx = 5)
 		self.segs_list.append(new_seg)
